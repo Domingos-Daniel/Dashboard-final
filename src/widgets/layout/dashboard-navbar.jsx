@@ -73,7 +73,7 @@ export function DashboardNavbar() {
         </div>
         <div className="flex items-center">
           <div className="mr-auto md:mr-4 md:w-56">
-            <Input label="Type here" />
+            <Input label="Escreva Aqui" />
           </div>
           <IconButton
             variant="text"
@@ -90,7 +90,7 @@ export function DashboardNavbar() {
               className="hidden items-center gap-1 px-4 xl:flex"
             >
               <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
-              Sign In
+              Cadastrar
             </Button>
             <IconButton
               variant="text"

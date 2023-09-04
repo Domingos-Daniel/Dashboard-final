@@ -9,16 +9,16 @@ export function Footer({ brandName, brandLink, routes }) {
     <footer className="py-2">
       <div className="flex w-full flex-wrap items-center justify-center gap-6 px-2 md:justify-between">
         <Typography variant="small" className="font-normal text-inherit">
-          &copy; {year}, made with{" "}
-          <HeartIcon className="-mt-0.5 inline-block h-3.5 w-3.5" /> by{" "}
+          &copy; {year}, feito com{" "}
+          <HeartIcon className="-mt-0.5 inline-block h-3.5 w-3.5" /> por{" "}
           <a
-            href={brandLink}
+            href="safeq-ao.ao"
             target="_blank"
             className="transition-colors hover:text-blue-500"
           >
-            {brandName}
+            SafeQ
           </a>{" "}
-          for a better web.
+          por uma web melhor.
         </Typography>
         <ul className="flex items-center gap-4">
           {routes.map(({ name, path }) => (
@@ -41,13 +41,13 @@ export function Footer({ brandName, brandLink, routes }) {
 }
 
 Footer.defaultProps = {
-  brandName: "Creative Tim",
-  brandLink: "https://www.creative-tim.com",
+  brandName: "SafeQ",
+  brandLink: "https://www.safeq-ao.ao",
   routes: [
-    { name: "Creative Tim", path: "https://www.creative-tim.com" },
-    { name: "About Us", path: "https://www.creative-tim.com/presentation" },
+    { name: "SafeQ", path: "https://www.safeq-ao.com" },
+    { name: "Acerca de Nós", path: "https://www.safeq-ao.ao" },
     { name: "Blog", path: "https://www.creative-tim.com/blog" },
-    { name: "License", path: "https://www.creative-tim.com/license" },
+    { name: "Licença", path: "https://www.creative-tim.com/license" },
   ],
 };
 

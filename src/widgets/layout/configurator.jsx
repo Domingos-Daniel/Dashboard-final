@@ -72,10 +72,10 @@ export function Configurator() {
       <div className="flex items-start justify-between px-6 pt-8 pb-6">
         <div>
           <Typography variant="h5" color="blue-gray">
-            Dashboard Configurator
+            Configuração do Dashboard 
           </Typography>
           <Typography className="font-normal text-blue-gray-600">
-            See our dashboard options.
+            Veja as nossas opções para o dashboard 
           </Typography>
         </div>
         <IconButton
@@ -89,7 +89,7 @@ export function Configurator() {
       <div className="py-4 px-6">
         <div className="mb-12">
           <Typography variant="h6" color="blue-gray">
-            Sidenav Colors
+            Cores do Menu Lateral
           </Typography>
           <div className="mt-3 flex items-center gap-2">
             {Object.keys(sidenavColors).map((color) => (
@@ -107,10 +107,10 @@ export function Configurator() {
         </div>
         <div className="mb-12">
           <Typography variant="h6" color="blue-gray">
-            Sidenav Types
+            Tipos de Menus Lateral
           </Typography>
           <Typography variant="small" color="gray">
-            Choose between 3 different sidenav types.
+            Escolha entre 3 tipos diferentes de navegação lateral.
           </Typography>
           <div className="mt-3 flex items-center gap-2">
             <Button
@@ -123,13 +123,13 @@ export function Configurator() {
               variant={sidenavType === "transparent" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "transparent")}
             >
-              Transparent
+              Transparente
             </Button>
             <Button
               variant={sidenavType === "white" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "white")}
             >
-              White
+              Branco
             </Button>
           </div>
         </div>
@@ -137,7 +137,7 @@ export function Configurator() {
           <hr />
           <div className="flex items-center justify-between py-5">
             <Typography variant="h6" color="blue-gray">
-              Navbar Fixed
+              Fixar a barra de menu
             </Typography>
             <Switch
               id="navbar-fixed"
@@ -152,18 +152,18 @@ export function Configurator() {
               target="_black"
             >
               <Button variant="gradient" fullWidth>
-                Free Download
+                Baixar
               </Button>
             </a>
-            <a
+            <a className="hidden"
               href="https://www.material-tailwind.com/docs/react/installation?rel=mtdr"
               target="_black"
             >
               <Button variant="outlined" color="blue-gray" fullWidth>
-                View Documentation
+                Ver Documentação
               </Button>
             </a>
-            <a
+            <a className="hidden"
               href="https://www.material-tailwind.com/blocks/react?rel=mtdr"
               target="_black"
             >
@@ -173,7 +173,7 @@ export function Configurator() {
             </a>
           </div>
           <a
-            className="mx-auto flex items-center justify-center gap-2"
+            className="mx-auto flex items-center justify-center gap-2 hidden"
             href="https://github.com/creativetimofficial/material-tailwind-dashboard-react"
             target="_blank"
             rel="noreferrer"
@@ -206,7 +206,7 @@ export function Configurator() {
             </svg>
           </a>
         </div>
-        <div className="text-center">
+        <div className="text-center hidden">
           <Typography variant="h6" color="blue-gray">
             Thank you for sharing ❤️
           </Typography>

@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Dashboard, Auth } from "@/layouts";
+import firebaseApp from "@/pages/dashboard/firebaseConfig";
 
 function App() {
   return (

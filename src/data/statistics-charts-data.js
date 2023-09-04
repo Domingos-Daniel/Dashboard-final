@@ -14,13 +14,13 @@ const websiteViewsChart = {
     colors: "#fff",
     plotOptions: {
       bar: {
-        columnWidth: "16%",
+        columnWidth: "26%",
         borderRadius: 5,
       },
     },
     xaxis: {
       ...chartsConfig.xaxis,
-      categories: ["M", "T", "W", "T", "F", "S", "S"],
+      categories: ["S", "T", "Q", "Q", "S", "S", "D"],
     },
   },
 };
@@ -31,7 +31,7 @@ const dailySalesChart = {
   series: [
     {
       name: "Sales",
-      data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
+      data: [50, 40, 300, 320, 500, 350, 200, 230, 500, 700, 1000],
     },
   ],
   options: {
@@ -46,15 +46,17 @@ const dailySalesChart = {
     xaxis: {
       ...chartsConfig.xaxis,
       categories: [
-        "Apr",
-        "May",
+        "Jan",
+        "Fev",
+        "Abr",
+        "Mar",
         "Jun",
         "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
+        "Ago",
+        "Set",
+        "Out",
         "Nov",
-        "Dec",
+        "Dez",
       ],
     },
   },
@@ -73,23 +75,23 @@ const completedTasksChart = {
 export const statisticsChartsData = [
   {
     color: "blue",
-    title: "Website View",
-    description: "Last Campaign Performance",
-    footer: "campaign sent 2 days ago",
+    title: "Frequência diária de ATMs",
+    description: "Número total de ATMs fornecidos, frequências diária",
+    footer: "Dados de 2 min atrás",
     chart: websiteViewsChart,
   },
   {
     color: "pink",
-    title: "Daily Sales",
-    description: "15% increase in today sales",
-    footer: "updated 4 min ago",
+    title: "Frequência de Erros",
+    description: "15% de aumento em relação à ontem",
+    footer: "Atualizado 1s atrás",
     chart: dailySalesChart,
   },
   {
     color: "green",
-    title: "Completed Tasks",
-    description: "Last Campaign Performance",
-    footer: "just updated",
+    title: "Frequência de ATMs 100%",
+    description: "13% de aumento na resolução de problemas nos ATMs",
+    footer: "Agora mesmo",
     chart: completedTasksChart,
   },
 ];
