@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 const ATMCard = ({ atm }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const cash = atm.cash;
   const systemStatus = atm.systemStatus;
   const papel = atm.coins;
@@ -15,10 +17,9 @@ const ATMCard = ({ atm }) => {
   if (cash > 30000 && integridade >= 50 && papel > 1000) {
     cardColor = "bg-green-500"; // Cor verde
   } else if (
-    cash > 10000 &&
-    cash <= 30000 &&
-    integridade < 50 &&
-    integridade >= 30
+    (cash > 10000 && cash <= 30000) ||
+    (integridade < 50 && integridade >= 30) ||
+    (papel > 500 && papel < 1000)
   ) {
     cardColor = "bg-yellow-500"; // Cor de aviso
   }
@@ -42,10 +43,19 @@ const ATMCard = ({ atm }) => {
     sysIcon = "text-red-500";
   }
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="relative bg-white py-6 px-6 rounded-lg w-64 my-4 shadow-md">
+    <div className="relative my-4 w-64 rounded-lg bg-white py-6 px-6 shadow-md">
       <div
-        className={`text-white flex items-center absolute rounded-full py-4 px-4 shadow-xl left-4 -top-6 ${cardColor}`}
+        onClick={openModal}
+        className={`absolute left-4 -top-6 flex cursor-pointer items-center rounded-full py-4 px-4 text-white shadow-xl ${cardColor}`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -63,8 +73,8 @@ const ATMCard = ({ atm }) => {
         </svg>
       </div>
       <div className="mt-8">
-        <p className="text-xl font-semibold my-2">{atm.name}</p>
-        <div className="flex space-x-2 text-gray-400 text-sm">
+        <p className="my-2 text-xl font-semibold">{atm.name}</p>
+        <div className="flex space-x-2 text-sm text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -87,14 +97,14 @@ const ATMCard = ({ atm }) => {
           </svg>
           <p>Localização: {atm.location}</p>
         </div>
-        <div className={`flex space-x-2 text-sm my-3 text-gray-400`}>
+        <div className={`my-3 flex space-x-2 text-sm text-gray-400`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width={1.5}
             stroke="currentColor"
-            className={`w-6 h-6 ${MoneyIcon}`}
+            className={`h-6 w-6 ${MoneyIcon}`}
           >
             <path
               strokeLinecap="round"
@@ -104,14 +114,14 @@ const ATMCard = ({ atm }) => {
           </svg>
           <p>Dinheiro: {atm.cash}</p>
         </div>
-        <div className="flex space-x-2 text-gray-400 text-sm my-3">
+        <div className="my-3 flex space-x-2 text-sm text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width={1.5}
             stroke="currentColor"
-            className={`w-6 h-6 ${paperIcon}`}
+            className={`h-6 w-6 ${paperIcon}`}
           >
             <path
               strokeLinecap="round"
@@ -121,14 +131,14 @@ const ATMCard = ({ atm }) => {
           </svg>
           <p>Papel: {atm.coins}</p>
         </div>
-        <div className="flex space-x-2 text-gray-400 text-sm my-3">
+        <div className="my-3 flex space-x-2 text-sm text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width={1.5}
             stroke="currentColor"
-            className={`w-6 h-6 ${sysIcon}`}
+            className={`h-6 w-6 ${sysIcon}`}
           >
             <path
               strokeLinecap="round"
@@ -141,13 +151,73 @@ const ATMCard = ({ atm }) => {
         <div className="border-t-2" />
         <div className="flex justify-between">
           <div className="my-2">
-            <p className="font-semibold text-base mb-2">Integridade</p>
-            <div className="text-base text-gray-400 font-semibold">
+            <p className="mb-2 text-base font-semibold">Integridade</p>
+            <div className="text-base font-semibold text-gray-400">
               <p>{atm.integrity}%</p>
             </div>
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-96 rounded-lg font-semibold bg-white p-4">
+            <p className="mb-2 text-xl font-semibold">{atm.name}</p>
+            <p className="pb-2">ID: {atm.id}</p>
+            <p className="pb-2">Nome: {atm.name}</p>
+            <p className="border-b pb-4">Localização: {atm.location}</p>
+            {atm.integrity < 50 && (
+              <p className="animate-pulse border-b pb-2 text-red-500">
+                {" "}
+                {/* Adicionando a classe animate-pulse */}A integridade está
+                muito baixa e necessita de assistência.
+              </p> 
+            )}
+            {atm.cash < 70000 && (
+              <p className="animate-pulse border-b pb-2 text-red-500">
+                {" "}
+                {/* Adicionando a classe animate-pulse */}
+                Necessita de recarga (dinheiro abaixo de 70000).
+              </p>
+            )}
+            {atm.cash > 70000 && (
+              <p className="border-b pb-2 text-green-500">
+                Tem Dinheiro suficiente.
+              </p>
+            )}
+            {atm.cash > 500 && (
+              <p className="border-b pb-2 text-green-500">
+                Tem Papel suficiente.
+              </p>
+            )}
+            {atm.coins < 500 && (
+              <p className="animate-pulse border-b pb-2 text-red-500">
+                {" "}
+                {/* Adicionando a classe animate-pulse */}
+                Necessita de recarga de papel (papel abaixo de 500).
+              </p>
+            )}
+            {atm.systemStatus === "on" && (
+              <p className="border-b pb-2 text-green-500">
+                O sistema está ligado e funcionando normalmente.
+              </p>
+            )}
+            {atm.systemStatus === "of" && (
+              <p className="animate-pulse border-b pb-2 text-red-500">
+                {" "}
+                {/* Adicionando a classe animate-pulse */}O ATM está sem
+                sistema, necessita de assistência urgente.
+              </p>
+            )}
+            <button
+              onClick={closeModal}
+              className="mt-4 rounded-md bg-blue-500 py-2 px-4 text-white"
+            >
+              Fechar Detalhes
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
