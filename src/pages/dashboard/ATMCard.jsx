@@ -50,7 +50,7 @@ const ATMCard = ({ atm }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
+ 
   return (
     <div className="relative my-4 w-64 rounded-lg bg-white py-6 px-6 shadow-md">
       <div

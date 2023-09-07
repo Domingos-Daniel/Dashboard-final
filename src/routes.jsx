@@ -12,6 +12,7 @@ import {
 import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
 import Atm from "@/pages/dashboard/atm";
 import SearchATM from "@/pages/dashboard/SearchATM";
+import ATMCharts from "@/pages/dashboard/ATMCharts";
 import { SignIn, SignUp } from "@/pages/auth";
 
 const icon = {
@@ -38,8 +39,8 @@ export const routes = [
       {
         icon: <ChartBarIcon {...icon} />,
         name: "Gráficos & Analytics",
-        path: "/home",
-        element: <Profile />,
+        path: "/analytcs",
+        element: <ATMCharts />,
       },
       
       {
