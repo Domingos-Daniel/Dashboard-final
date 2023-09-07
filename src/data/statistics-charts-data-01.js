@@ -4,7 +4,7 @@ const dailySalesChart = {
     height: 320,
     series: [
       {
-        name: "Sales",
+        name: "Total ATMs",
         data: [10, 140, 50, 150, 65, 100, 140],
       },
     ],
