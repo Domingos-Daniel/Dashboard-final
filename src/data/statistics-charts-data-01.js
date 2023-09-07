@@ -1,11 +1,11 @@
 import { chartsConfig } from "@/configs";
 const dailySalesChart = {
-    type: "line",
+    type: "area",
     height: 320,
     series: [
       {
         name: "Sales",
-        data: [10, 20, 50, 60, 65, 100, 140],
+        data: [10, 140, 50, 150, 65, 100, 140],
       },
     ],
     options: {
@@ -32,15 +32,6 @@ const dailySalesChart = {
     },
   };
   
-  const completedTasksChart = {
-    ...dailySalesChart,
-    series: [
-      {
-        name: "Tasks",
-        data: [120, 150, 150,  100, 150, 133, 30],
-      },
-    ],
-  };
   
 
 export const statisticsChartsData01 = [
