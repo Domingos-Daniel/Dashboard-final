@@ -15,7 +15,7 @@ export function ATMCharts() {
     <>
       <div className="mb-6 my-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-8 xl:grid-cols-1">
         {statisticsChartsData01.map((props) => (
-          <StatisticsChart
+            <StatisticsChart
             key={props.title}
             {...props}
             footer={
@@ -30,6 +30,7 @@ export function ATMCharts() {
           />
         ))}
       </div>
+      
     </>
   );
 }

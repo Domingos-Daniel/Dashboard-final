@@ -1,3 +1,6 @@
+import React, { useRef } from "react";
+import PropTypes from "prop-types";
+import Chart from "react-apexcharts";
 import {
   Card,
   CardHeader,
@@ -5,14 +8,43 @@ import {
   CardFooter,
   Typography,
 } from "@material-tailwind/react";
-import PropTypes from "prop-types";
-import Chart from "react-apexcharts";
 
 export function StatisticsChart({ color, chart, title, description, footer }) {
+  const chartRef = useRef(null);
+
+  const chartOptions = {
+    ...chart.options,
+    chart: {
+      ...chart.options.chart,
+      zoom: {
+        enabled: true,
+        type: "xy",
+      },
+      toolbar: {
+        show: true, // Mostra a barra de ferramentas
+        tools: {
+          zoomin: true, // Habilita o botão de zoom in
+          zoomout: true, // Habilita o botão de zoom out
+          download: true, // Habilita o botão de download/exportação
+          selection: true, // Habilita a seleção de área
+          reset: true, // Habilita o botão de reset
+        },
+      },
+    },
+    colors: ["#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0"], // Defina as cores do gráfico
+  };
+
   return (
     <Card>
       <CardHeader variant="gradient" color={color}>
-        <Chart {...chart} />
+        <Chart
+          options={chartOptions}
+          series={chart.series}
+          type={chart.type}
+          height={chart.height}
+          width="100%"
+          ref={chartRef}
+        />
       </CardHeader>
       <CardBody className="p-6">
         <Typography variant="h6" color="blue-gray">
@@ -59,7 +91,12 @@ StatisticsChart.propTypes = {
     "pink",
     "red",
   ]),
-  chart: PropTypes.object.isRequired,
+  chart: PropTypes.shape({
+    options: PropTypes.object.isRequired,
+    series: PropTypes.array.isRequired,
+    type: PropTypes.string.isRequired,
+    height: PropTypes.number.isRequired,
+  }).isRequired,
   title: PropTypes.node.isRequired,
   description: PropTypes.node.isRequired,
   footer: PropTypes.node,

@@ -1,0 +1,56 @@
+/* Altera a cor da fonte para preto */
+.apexcharts-menu {
+  color: black !important;
+}
+
+/* Altera a cor do fundo do dropdown */
+.apexcharts-menu {
+  background-color: #ffffff !important; /* Define a cor do fundo como branco */
+  border: 1px solid #ccc; /* Adiciona uma borda */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra */
+}
+
+/* Altera a cor de fundo do item do menu quando hover */
+.apexcharts-menu:hover {
+  background-color: #f0f0f0 !important; /* Define a cor do fundo ao passar o mouse */
+}
+
+/* Altera a cor da fonte do item do menu quando hover */
+.apexcharts-menu:hover {
+  color: black !important; /* Define a cor da fonte ao passar o mouse */
+}
+
+/* Altera a cor da seta de dropdown */
+.apexcharts-menu-icon svg {
+  fill: black !important; /* Define a cor da seta como preto */
+}
+
+/* Altera a cor de fundo dos itens do menu quando hover */
+.apexcharts-menu-item:hover {
+  background-color: #f0f0f0 !important; /* Define a cor do fundo dos itens ao passar o mouse */
+}
+
+/* Altera a cor da fonte dos itens do menu quando hover */
+.apexcharts-menu-item:hover {
+  color: black !important; /* Define a cor da fonte dos itens ao passar o mouse */
+}
+
+/* Altera a cor de fundo dos itens do menu selecionado */
+.apexcharts-menu-item-selected {
+  background-color: #e0e0e0 !important; /* Define a cor do fundo dos itens selecionados */
+}
+
+/* Altera a cor da fonte dos itens do menu selecionado */
+.apexcharts-menu-item-selected {
+  color: black !important; /* Define a cor da fonte dos itens selecionados */
+}
+
+/* Altera a cor de fundo dos itens do menu quando hover (selecionado) */
+.apexcharts-menu-item-selected:hover {
+  background-color: #f0f0f0 !important; /* Define a cor do fundo dos itens selecionados ao passar o mouse */
+}
+
+/* Altera a cor da fonte dos itens do menu quando hover (selecionado) */
+.apexcharts-menu-item-selected:hover {
+  color: black !important; /* Define a cor da fonte dos itens selecionados ao passar o mouse */
+}
