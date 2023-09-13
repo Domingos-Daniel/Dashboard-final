@@ -5,17 +5,17 @@ const chartData = {
     {
       label: "100% Funcional",
       color: "#00FF00", // Verde
-      data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+      data: [15, 13, 15, 16, 10, 11, 16, 13, 15],
     },
     {
       label: "Pendentes",
       color: "#FFFF00", // Amarelo
-      data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+      data: [1, 2, 1, 0, 3, 2, 0, 1, 1],
     },
     {
       label: "Urgente",
       color: "#FF0000", // Vermelho
-      data: [150, 120, 180, 200, 240, 180, 260, 220, 280],
+      data: [0, 1, 0, 0, 3, 2, 0, 2, 0],
     },
   ],
 };
