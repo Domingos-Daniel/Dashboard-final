@@ -1,4 +1,5 @@
 import React from "react";
+import DefaultLineChart from "../../widgets/Chart/LineCharts/DefaultLineChart";
 import {
   Typography,
   Card,
@@ -21,16 +22,20 @@ import {
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
 import { StatisticsChart } from "@/widgets/charts";
+import LineChart from "@/widgets/charts/LineChart";
 import {
   statisticsCardsData,
   statisticsChartsData,
   projectsTableData,
   ordersOverviewData,
 } from "@/data";
+import chartData from "../../data/line-chart-data-01"; // Importe os dados do gráfico
 
+import DataSyncComponent from "../../DataSyncComponent";
 export function Home() {
   return (
     <div className="mt-12">
+      <DataSyncComponent />
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
         {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
           <StatisticsCard
@@ -66,7 +71,13 @@ export function Home() {
           />
         ))}
       </div>
-      <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3 hidden">
+      <LineChart
+        chartData={chartData} // Passe os dados do gráfico como prop
+        icon={{ color: "info", component: "leaderboard" }}
+        title="Gradient Line Chart"
+        description="Visits from devices"
+      />
+      <div className="mb-4 grid hidden grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-2">
           <CardHeader
             floated={false}

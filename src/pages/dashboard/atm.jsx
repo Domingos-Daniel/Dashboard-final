@@ -11,6 +11,7 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import { Square3Stack3DIcon, ListBulletIcon } from "@heroicons/react/24/solid";
+import { apiUrl } from '../../apiConfig'; // Importe a URL da API definida globalmente
 
 export function Atm() {
   const [atms, setATMs] = useState([]);
@@ -21,7 +22,7 @@ export function Atm() {
 
   useEffect(() => {
     axios
-      .get("https://my-json-server.typicode.com/Domingos-Daniel/api-teste/atms")
+      .get(apiUrl)
       .then((response) => {
         setATMs(response.data);
       })

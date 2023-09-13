@@ -15,6 +15,7 @@ import SearchATM from "@/pages/dashboard/SearchATM";
 import ATMCharts from "@/pages/dashboard/ATMCharts";
 import { SignIn, SignUp } from "@/pages/auth";
 
+
 const icon = {
   className: "w-5 h-5 text-inherit",
 };
