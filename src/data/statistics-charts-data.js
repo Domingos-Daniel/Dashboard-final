@@ -5,8 +5,8 @@ const websiteViewsChart = {
   height: 220,
   series: [
     {
-      name: "Views",
-      data: [50, 20, 10, 22, 50, 10, 40],
+      name: "ATMs Recebidos",
+      data: [170, 165, 169, 170, 169, 100, 170],
     },
   ],
   options: {

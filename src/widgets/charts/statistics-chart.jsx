@@ -30,8 +30,7 @@ export function StatisticsChart({ color, chart, title, description, footer }) {
           reset: true, // Habilita o botão de reset
         },
       },
-    },
-    colors: ["#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0"], // Defina as cores do gráfico
+    }
   };
 
   return (
@@ -64,7 +63,7 @@ export function StatisticsChart({ color, chart, title, description, footer }) {
 }
 
 StatisticsChart.defaultProps = {
-  color: "blue",
+  color: "gray",
   footer: null,
 };
 
