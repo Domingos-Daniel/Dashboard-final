@@ -32,6 +32,7 @@ import {
 import chartData from "../../data/line-chart-data-01"; // Importe os dados do gráfico
 
 import DataSyncComponent from "../../DataSyncComponent";
+import PieChart from "@/widgets/charts/PieChart";
 export function Home() {
   return (
     <div className="mt-12">
@@ -71,12 +72,8 @@ export function Home() {
           />
         ))}
       </div>
-      <LineChart
-        chartData={chartData} // Passe os dados do gráfico como prop
-        icon={{ color: "info", component: "leaderboard" }}
-        title="Gradient Line Chart"
-        description="Visits from devices"
-      />
+      <PieChart />
+
       <div className="mb-4 grid hidden grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-2">
           <CardHeader
