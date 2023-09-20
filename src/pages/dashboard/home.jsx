@@ -71,7 +71,10 @@ export function Home() {
           />
         ))}
       </div>
+      <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
+       
       <PieChart />
+      </div>
 
       <div className="mb-4 grid hidden grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-2">

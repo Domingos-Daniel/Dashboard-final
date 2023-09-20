@@ -30,8 +30,8 @@ const dailySalesChart = {
   height: 220,
   series: [
     {
-      name: "Sales",
-      data: [50, 40, 300, 320, 500, 350, 200, 230, 500, 700, 1000],
+      name: "ATMs com erro",
+      data: [50, 40, 10, 0, 30, 100, 10, 230, 50, 100, 100],
     },
   ],
   options: {
@@ -66,8 +66,8 @@ const completedTasksChart = {
   ...dailySalesChart,
   series: [
     {
-      name: "Tasks",
-      data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+      name: "ATMs Operando a 100%",
+      data: [350, 40, 300, 220, 200, 250, 240, 230, 300],
     },
   ],
 };
