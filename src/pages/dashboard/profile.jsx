@@ -33,20 +33,20 @@ export function Profile() {
           <div className="mb-10 flex items-center justify-between gap-6">
             <div className="flex items-center gap-6">
               <Avatar
-                src="/img/bruce-mars.jpeg"
+                src="https://png.pngtree.com/png-clipart/20190516/original/pngtree-users-vector-icon-png-image_3725294.jpg"
                 alt="bruce-mars"
                 size="xl"
                 className="rounded-lg shadow-lg shadow-blue-gray-500/40"
               />
               <div>
                 <Typography variant="h5" color="blue-gray" className="mb-1">
-                  Richard Davis
+                  Manuel Antonio
                 </Typography>
                 <Typography
                   variant="small"
                   className="font-normal text-blue-gray-600"
                 >
-                  CEO / Co-Founder
+                  CEO / Co-Fundador
                 </Typography>
               </div>
             </div>
@@ -55,15 +55,15 @@ export function Profile() {
                 <TabsHeader>
                   <Tab value="app">
                     <HomeIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-                    App
+                    Aplicação 
                   </Tab>
                   <Tab value="message">
                     <ChatBubbleLeftEllipsisIcon className="-mt-0.5 mr-2 inline-block h-5 w-5" />
-                    Message
+                    Mensagens
                   </Tab>
                   <Tab value="settings">
                     <Cog6ToothIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-                    Settings
+                    Configurações 
                   </Tab>
                 </TabsHeader>
               </Tabs>
@@ -72,7 +72,7 @@ export function Profile() {
           <div className="gird-cols-1 mb-12 grid gap-12 px-4 lg:grid-cols-2 xl:grid-cols-3">
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-3">
-                Platform Settings
+                Configuração da Aplicação 
               </Typography>
               <div className="flex flex-col gap-12">
                 {platformSettingsData.map(({ title, options }) => (
@@ -98,13 +98,13 @@ export function Profile() {
               </div>
             </div>
             <ProfileInfoCard
-              title="Profile Information"
-              description="Hi, I'm Alec Thompson, Decisions: If you can't decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
+              title="Informação do Perfil"
+              description="Olá, eu sou Antonio, Decisões: Se você não pode decidir, a resposta é não. Se dois caminhos igualmente difíceis, escolha o mais doloroso a curto prazo (evitar a dor é criar uma ilusão de igualdade)."
               details={{
-                "first name": "Alec M. Thompson",
-                mobile: "(44) 123 1234 123",
-                email: "alecthompson@mail.com",
-                location: "USA",
+                "primeiro nome": "Manuel Antonio ",
+                Telefone: "(244) 123 123 123",
+                email: "antoniomanuel@bfa.com",
+                Localização: "AO",
                 social: (
                   <div className="flex items-center gap-4">
                     <i className="fa-brands fa-facebook text-blue-700" />
@@ -120,10 +120,10 @@ export function Profile() {
               }
             />
             <div>
-              <Typography variant="h6" color="blue-gray" className="mb-3">
+              <Typography variant="h6" color="blue-gray" className="mb-3 hidden">
                 Platform Settings
               </Typography>
-              <ul className="flex flex-col gap-6">
+              <ul className="flex flex-col gap-6 hidden">
                 {conversationsData.map((props) => (
                   <MessageCard
                     key={props.name}
@@ -138,7 +138,7 @@ export function Profile() {
               </ul>
             </div>
           </div>
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-4 hidden">
             <Typography variant="h6" color="blue-gray" className="mb-2">
               Projects
             </Typography>

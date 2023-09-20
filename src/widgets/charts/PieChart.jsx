@@ -75,14 +75,14 @@ const PieChart = () => {
   const series = chartData;
 
   return (
-    <div className="mb-3 rounded-lg bg-white p-4 shadow-lg">
-      <h2 className="mb-2 text-lg font-semibold">Gráfico Em Cartão</h2>
+    <div className="mb-3 rounded-lg p-4 ">
       <div className="flex items-center justify-center">
         <ApexCharts
           options={options}
           series={series}
           type="pie"
-          width={380}
+          width={400}
+          height={400}
         />
       </div>
     </div>

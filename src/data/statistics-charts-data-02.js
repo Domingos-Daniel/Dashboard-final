@@ -40,7 +40,7 @@ export const statisticsChartsData02 = [
   {
     color: "green",
     title: "ATMs 100% Funcionais Recebidos esta semana",
-    description: "15% de aumento em relação à ontem",
+    description: "3% de aumento em relação à ontem",
     footer: "Atualizado 2 min atrás",
     chart: dailySalesChart,
   },

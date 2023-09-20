@@ -72,12 +72,9 @@ export function Home() {
           />
         ))}
       </div>
-      <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
-       
-      <PieChart />
-      </div>
+      
 
-      <RealtimeATMStatusComponent bgColor="bg-gray-300" />
+      <RealtimeATMStatusComponent bgColor="bg-gray-400" />
 
 
       <div className="mb-4 grid hidden grid-cols-1 gap-6 xl:grid-cols-3">

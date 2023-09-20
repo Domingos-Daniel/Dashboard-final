@@ -1,35 +1,35 @@
 export const platformSettingsData = [
   {
-    title: "account",
+    title: "Conta",
     options: [
       {
         checked: true,
-        label: "Email me when someone follows me",
+        label: "Email quando surge um proproblema urgente",
       },
       {
         checked: false,
-        label: "Email me when someone answers on my post",
+        label: "Email quando houver algum erro na aplicação",
       },
       {
         checked: true,
-        label: "Email me when someone mentions me",
+        label: "Email para solicitar informação",
       },
     ],
   },
   {
-    title: "application",
+    title: "Aplicação",
     options: [
       {
         checked: false,
-        label: "New launches and projects",
+        label: "Alteração na API",
       },
       {
         checked: true,
-        label: "Monthly product updates",
+        label: "Relatório Semanal",
       },
       {
         checked: false,
-        label: "Subscribe to newsletter",
+        label: "newsletter",
       },
     ],
   },
