@@ -9,6 +9,7 @@ import {
   import {
     ClockIcon
   } from "@heroicons/react/24/outline";
+import RealtimeATMStatusComponent from "@/widgets/charts/RealtimeATMStatusComponent";
 export function ATMCharts() {
   
   return (
@@ -30,7 +31,10 @@ export function ATMCharts() {
           />
         ))}
       </div>
-      
+
+      <div className="mb-6 my-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-8 xl:grid-cols-1">
+        <RealtimeATMStatusComponent bgColor="bg-gray-300" />
+      </div>
     </>
   );
 }

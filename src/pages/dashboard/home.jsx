@@ -33,6 +33,7 @@ import chartData from "../../data/line-chart-data-01"; // Importe os dados do gr
 
 import DataSyncComponent from "../../DataSyncComponent";
 import PieChart from "@/widgets/charts/PieChart";
+import RealtimeATMStatusComponent from "@/widgets/charts/RealtimeATMStatusComponent";
 export function Home() {
   return (
     <div className="mt-12">
@@ -75,6 +76,9 @@ export function Home() {
        
       <PieChart />
       </div>
+
+      <RealtimeATMStatusComponent bgColor="bg-gray-300" />
+
 
       <div className="mb-4 grid hidden grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-2">
