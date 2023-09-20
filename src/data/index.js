@@ -1,6 +1,7 @@
 export * from "@/data/statistics-cards-data";
 export * from "@/data/statistics-charts-data";
 export * from "@/data/statistics-charts-data-01";
+export * from "@/data/statistics-charts-data-02";
 export * from "@/data/projects-table-data";
 export * from "@/data/orders-overview-data";
 export * from "@/data/platform-settings-data";

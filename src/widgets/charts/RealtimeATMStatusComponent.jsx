@@ -118,13 +118,13 @@ const RealtimeATMStatusComponent = ({ bgColor }) => {
   ];
 
   return (
-    <div className={`realtime-atm-status-component ${bgColor} p-4 rounded-lg shadow-lg mb-4`}>
+    <div className={`realtime-atm-status-component ${bgColor} p-4 rounded-xl shadow-xl mb-4`}>
       <h2 className="text-2xl font-semibold mb-4">Status em tempo real</h2>
       <ApexCharts
         options={options}
         series={series}
         type="line"
-        height={350}
+        height={330}
       />
     </div>
   );

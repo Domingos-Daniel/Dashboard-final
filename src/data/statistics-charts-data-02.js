@@ -10,7 +10,7 @@ const dailySalesChart = {
   ],
   options: {
     ...chartsConfig,
-    colors: ["#f44336"],
+    colors: ["#fff"],
     stroke: {
       lineCap: "round",
     },
@@ -35,15 +35,15 @@ const dailySalesChart = {
   
   
 
-export const statisticsChartsData01 = [
+export const statisticsChartsData02 = [
  
   {
-    color: "brown",
-    title: "ATMs Com Problemas Recebidos esta semana",
+    color: "green",
+    title: "ATMs 100% Funcionais Recebidos esta semana",
     description: "15% de aumento em relação à ontem",
-    footer: "Atualizado 1s atrás",
+    footer: "Atualizado 2 min atrás",
     chart: dailySalesChart,
   },
 ];
 
-export default statisticsChartsData01;
+export default statisticsChartsData02;
