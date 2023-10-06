@@ -11,30 +11,39 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import { Square3Stack3DIcon, ListBulletIcon } from "@heroicons/react/24/solid";
-import { apiUrl } from '../../apiConfig'; // Importe a URL da API definida globalmente
+import { apiUrl } from '../../apiConfig';
 
 export function Atm() {
   const [atms, setATMs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const [viewMode, setViewMode] = useState("card");
-  const [filterColor, setFilterColor] = useState("all"); // Adicione o estado para o filtro de cores
+  const [filterColor, setFilterColor] = useState("all"); 
 
   useEffect(() => {
-    axios
-      .get(apiUrl)
-      .then((response) => {
+    // Função para buscar dados da API e atualizar o estado
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(apiUrl);
         setATMs(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Erro ao buscar os dados:", error);
-      });
+      }
+    };
+
+    // Inicialmente, buscar dados da API
+    fetchData();
+
+    // Definir um intervalo para buscar dados a cada 10 segundos (ajuste conforme necessário)
+    const intervalId = setInterval(fetchData, 10000);
+
+    // Limpar o intervalo quando o componente for desmontado
+    return () => clearInterval(intervalId);
   }, []);
 
   const lastItemIndex = currentPage * itemsPerPage;
   const firstItemIndex = lastItemIndex - itemsPerPage;
 
-  // Função para filtrar os ATMs com base na cor
   const filterATMsByColor = (atms, color) => {
     if (color === "all") {
       return atms;
@@ -86,7 +95,6 @@ export function Atm() {
   return (
     <>
       <Tabs value={viewMode}>
-        {/* Adicione um novo Tab para o filtro de cores */}
         <TabsHeader>
           <Tab key="card" value="card" onClick={() => setViewMode("card")}>
             Visualização em Cartão
@@ -97,7 +105,6 @@ export function Atm() {
         </TabsHeader>
         <TabsBody>
           <TabPanel key="card" value="card">
-            {/* Adicione um select para o filtro de cores */}
             <div className="filter-select">
               <div className="relative inline-flex">
                 <select
