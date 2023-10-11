@@ -74,7 +74,7 @@ export function Atm() {
   const sendSMSTwilio = (to, text) => {
   const accountSid = "AC41cb4105caaf1512400683fdfd7c8689"; // Seu Twilio Account SID
   const authToken = "33784612dbf7f77e52837a8716017cf8"; // Seu Twilio Auth Token
-  const from = "+193877705630"; // Seu número Twilio tire o 0
+  const from = "+19387770563"; // Seu número Twilio tire o 0
 
     const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
     const auth = "Basic " + btoa(accountSid + ":" + authToken);
