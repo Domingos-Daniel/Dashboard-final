@@ -4,7 +4,7 @@ const ATMModal = ({ atm, showModal, handleCloseModal }) => {
   const [loading, setLoading] = useState(false);
 
   return (
-    <>
+    <> 
       {showModal && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center transition-opacity duration-300 ease-in-out bg-gray-900 bg-opacity-50 opacity-100">
           <div className="absolute bg-white p-4 rounded-lg w-96 font-semibold">

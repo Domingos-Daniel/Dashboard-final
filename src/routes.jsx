@@ -8,10 +8,12 @@ import {
   UserPlusIcon,
   QueueListIcon,
   MagnifyingGlassCircleIcon,
+  HomeModernIcon,
 } from "@heroicons/react/24/solid";
 import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
 import Atm from "@/pages/dashboard/atm";
 import SearchATM from "@/pages/dashboard/SearchATM";
+import ATMByAgency from "./pages/dashboard/ATMByAgency";
 import ATMCharts from "@/pages/dashboard/ATMCharts";
 import { SignIn, SignUp } from "@/pages/auth";
 
@@ -49,6 +51,13 @@ export const routes = [
         name: "Pesquisar ATM",
         path: "/search",
         element: <SearchATM />,
+      },
+      
+      {
+        icon: <HomeModernIcon {...icon} />,
+        name: "Agências",
+        path: "/agencias",
+        element: <ATMByAgency />,
       },
       {
         icon: <UserCircleIcon {...icon} />,

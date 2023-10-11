@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 const ATMCard = ({ atm }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
 
   const cash = atm.cash;
   const systemStatus = atm.systemStatus;
@@ -45,6 +46,12 @@ const ATMCard = ({ atm }) => {
 
   const openModal = () => {
     setIsModalOpen(true);
+  };
+
+  
+  const openSecondModal = () => {
+    setIsSecondModalOpen(true);
+    setIsModalOpen(false); // Feche o primeiro modal quando o segundo é aberto
   };
 
   const closeModal = () => {
@@ -162,6 +169,24 @@ const ATMCard = ({ atm }) => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="w-96 rounded-lg font-semibold bg-white p-4">
+          <div className="flex justify-end">
+        <button onClick={closeModal}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-gray-600 hover:text-gray-800 cursor-pointer"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
             <p className="mb-2 text-xl font-semibold">{atm.name}</p>
             <p className="pb-2">ID: {atm.id}</p>
             <p className="pb-2">Nome: {atm.name}</p>
@@ -210,14 +235,119 @@ const ATMCard = ({ atm }) => {
               </p>
             )}
             <button
-              onClick={closeModal}
+              onClick={openSecondModal}
               className="mt-4 rounded-md bg-blue-500 py-2 px-4 text-white"
             >
-              Fechar Detalhes
+              Detalhe individual
             </button>
           </div>
         </div>
       )}
+{isSecondModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    
+    <div className="w-1/2 rounded-lg font-semibold bg-white p-6">
+      <p className="mb-4 text-2xl font-semibold text-center">{atm.name}</p>
+      <div className="border-b border-gray-300 mb-4">
+        <p className="mb-2 text-lg font-semibold">Informações Adicionais</p>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              className="h-6 w-6 mr-2 text-blue-500"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            <p>Frequência de Uso: Alta</p>
+          </div>
+          <div className="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              className="h-6 w-6 mr-2 text-yellow-500"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            <p>Frequência de Recarga de Dinheiro: Mensal</p>
+          </div>
+          <div className="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              className="h-6 w-6 mr-2 text-red-500"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            <p>Frequência de Recarga de Papel: Semanal</p>
+          </div>
+        </div>
+      </div>
+      <div className="border-b border-gray-300 mb-4">
+        <p className="mb-2 text-lg font-semibold">Histórico</p>
+        <p>
+          O ATM foi instalado em 15 de setembro de 2023 na Rua Principal.
+          Frequência de recarga de dinheiro: Mensal.
+          Frequência de recarga de papel: Semanal.
+        </p>
+        <p>
+          Data da última recarga de dinheiro: 10 de outubro de 2023.
+          Data da última recarga de papel: 5 de outubro de 2023.
+        </p>
+        <p>
+          Frequência com que o dinheiro acaba: Uma vez a cada 3 semanas.
+          Frequência com que o papel acaba: Uma vez por semana.
+        </p>
+      </div>
+      <div className="border-b border-gray-300 mb-4">
+        <p className="mb-2 text-lg font-semibold">Histórico de Manutenção</p>
+        <p>
+          Problema relatado: Falha no dispensador de dinheiro.
+          Data de relato: 12 de novembro de 2023.
+          Ação tomada: Substituição do dispensador.
+        </p>
+        <p>
+          Problema relatado: Sistema travado.
+          Data de relato: 5 de outubro de 2023.
+          Ação tomada: Reinicialização do sistema.
+        </p>
+        <p>
+          Problema relatado: Impressora com defeito.
+          Data de relato: 18 de setembro de 2023.
+          Ação tomada: Substituição da impressora.
+        </p>
+      </div>
+      <button
+        onClick={() => setIsSecondModalOpen(false)}
+        className="mt-6 rounded-md bg-blue-500 py-2 px-4 text-white float-right"
+      >
+        Fechar Detalhes
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

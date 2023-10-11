@@ -10,7 +10,6 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { Square3Stack3DIcon, ListBulletIcon } from "@heroicons/react/24/solid";
 import { apiUrl } from '../../apiConfig';
 
 export function Atm() {
@@ -18,10 +17,10 @@ export function Atm() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const [viewMode, setViewMode] = useState("card");
-  const [filterColor, setFilterColor] = useState("all"); 
+  const [filterColor, setFilterColor] = useState("all");
+  const [processedATMIds, setProcessedATMIds] = useState([]);
 
   useEffect(() => {
-    // Função para buscar dados da API e atualizar o estado
     const fetchData = async () => {
       try {
         const response = await axios.get(apiUrl);
@@ -31,13 +30,10 @@ export function Atm() {
       }
     };
 
-    // Inicialmente, buscar dados da API
     fetchData();
 
-    // Definir um intervalo para buscar dados a cada 10 segundos (ajuste conforme necessário)
     const intervalId = setInterval(fetchData, 10000);
 
-    // Limpar o intervalo quando o componente for desmontado
     return () => clearInterval(intervalId);
   }, []);
 
@@ -72,6 +68,73 @@ export function Atm() {
             atm.integrity >= 30
           )
       );
+    }
+  };
+
+  const sendSMSTwilio = (to, text) => {
+  const accountSid = "AC41cb4105caaf1512400683fdfd7c8689"; // Seu Twilio Account SID
+  const authToken = "33784612dbf7f77e52837a8716017cf8"; // Seu Twilio Auth Token
+  const from = "+193877705630"; // Seu número Twilio tire o 0
+
+    const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+    const auth = "Basic " + btoa(accountSid + ":" + authToken);
+
+    const details = {
+      To: to,
+      From: from,
+      Body: text
+    };
+
+    const formBody = [];
+    for (const property in details) {
+      const encodedKey = encodeURIComponent(property);
+      const encodedValue = encodeURIComponent(details[property]);
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+    const requestBody = formBody.join("&");
+
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        Authorization: auth
+      },
+      body: requestBody
+    };
+
+    fetch(url, options)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log("SMS enviado com sucesso:", responseJson);
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar o SMS:", error);
+      });
+  };
+
+  const sendSMS = (atm) => {
+    const { cash, integrity, coins, managerPhone, managerName, id } = atm;
+    const issues = [];
+
+    if (cash < 10000) {
+      issues.push("dinheiro");
+    }
+
+    if (integrity < 50) {
+      issues.push("integridade baixa com ",integrity,"%");
+    }
+
+    if (coins < 1000) {
+      issues.push("papel");
+    }
+
+    if (issues.length > 0) {
+      const message = `ATM ID ${id} (${managerName}) está prestes a ficar sem ${issues.join(", ")}. Por favor, verifique.`;
+
+      if (!processedATMIds.includes(id)) {
+        sendSMSTwilio(managerPhone, message);
+        setProcessedATMIds([...processedATMIds, id]);
+      }
     }
   };
 
@@ -120,9 +183,10 @@ export function Atm() {
             </div>
             <div className="App mt-5 flex items-center justify-center">
               <div className="flex flex-wrap gap-6 sm:gap-4 md:gap-6 lg:gap-8">
-                {currentATMs.map((atm) => (
-                  <ATMCard key={atm.id} atm={atm} />
-                ))}
+                {currentATMs.map((atm) => {
+                  sendSMS(atm);
+                  return <ATMCard key={atm.id} atm={atm} />;
+                })}
               </div>
             </div>
           </TabPanel>

@@ -21,7 +21,7 @@ import {
 import { Link } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
 import { platformSettingsData, conversationsData, projectsData } from "@/data";
-
+import NumeroFormulario from './NumeroFormulario';
 export function Profile() {
   return (
     <>
@@ -103,7 +103,7 @@ export function Profile() {
               details={{
                 "primeiro nome": "Manuel Antonio ",
                 Telefone: "(244) 123 123 123",
-                email: "antoniomanuel@bfa.com",
+                email: "antoniomanuel@banco.com",
                 Localização: "AO",
                 social: (
                   <div className="flex items-center gap-4">
@@ -119,6 +119,8 @@ export function Profile() {
                 </Tooltip>
               }
             />
+
+            <NumeroFormulario />
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-3 hidden">
                 Platform Settings
