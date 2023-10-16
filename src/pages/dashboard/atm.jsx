@@ -3,7 +3,7 @@ import axios from "axios";
 import ATMCard from "./ATMCard";
 import ATMList from "./ATMList";
 import PaginationButtons from "./PaginationButtons";
-import {
+import { 
   Tabs,
   TabsHeader,
   TabsBody,
@@ -19,6 +19,7 @@ export function Atm() {
   const [viewMode, setViewMode] = useState("card");
   const [filterColor, setFilterColor] = useState("all");
   const [processedATMIds, setProcessedATMIds] = useState([]);
+  const [smsSentTimestamps, setSmsSentTimestamps] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,8 +54,8 @@ export function Atm() {
           atm.cash > 10000 &&
           atm.cash <= 30000 ||
           atm.integrity < 50 &&
-          atm.integrity >= 30||
-          atm.coins  > 500 &&
+          atm.integrity >= 30 ||
+          atm.coins > 500 &&
           atm.coins < 1000
       );
     } else if (color === "red") {
@@ -72,9 +73,9 @@ export function Atm() {
   };
 
   const sendSMSTwilio = (to, text) => {
-  const accountSid = "AC41cb4105caaf1512400683fdfd7c8689"; // Seu Twilio Account SID
-  const authToken = "33784612dbf7f77e52837a8716017cf8"; // Seu Twilio Auth Token
-  const from = "+19387770563"; // Seu número Twilio tire o 0
+    const accountSid = "AC244405a75e6cf7a7a0de3eadf5238a3a"; // Seu Twilio Account SID
+    const authToken = "5f36a6f7c2a77dac035f6d410a3a8c55"; // Seu Twilio Auth Token
+    const from = "+12295525457"; // Seu número Twilio tire o 0
 
     const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
     const auth = "Basic " + btoa(accountSid + ":" + authToken);
@@ -116,24 +117,23 @@ export function Atm() {
     const { cash, integrity, coins, managerPhone, managerName, id } = atm;
     const issues = [];
 
-    if (cash < 10000) {
-      issues.push("dinheiro");
+    if (!(cash > 30000 && integrity >= 50 && coins > 1000)) {
+      issues.push(`Dinheiro com ${cash} Kwanzas`);
+      if (integrity < 50) issues.push(`Integridade baixa com ${integrity}%`);
+      if (coins < 1000) issues.push(`Papel baixo com ${coins} unidades`);
     }
 
-    if (integrity < 50) {
-      issues.push("integridade baixa com ",integrity,"%");
-    }
-
-    if (coins < 1000) {
-      issues.push("papel");
-    }
-
-    if (issues.length > 0) {
+    if (issues.length > 0 && processedATMIds.filter(atmId => atmId === id).length < 2) {
       const message = `ATM ID ${id} (${managerName}) está prestes a ficar sem ${issues.join(", ")}. Por favor, verifique.`;
 
-      if (!processedATMIds.includes(id)) {
+      const currentTimestamp = Date.now();
+      if (
+        !smsSentTimestamps[id] ||
+        currentTimestamp - smsSentTimestamps[id] >= 300000
+      ) {
         sendSMSTwilio(managerPhone, message);
         setProcessedATMIds([...processedATMIds, id]);
+        setSmsSentTimestamps({ ...smsSentTimestamps, [id]: currentTimestamp });
       }
     }
   };
@@ -171,10 +171,10 @@ export function Atm() {
             <div className="filter-select">
               <div className="relative inline-flex">
                 <select
-                  className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-1 leading-tight shadow hover:border-gray-400 focus:outline-none"
+                  className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-2 leading-tight shadow hover:border-gray-400 focus:outline-none"
                   onChange={(e) => handleFilterChange(e.target.value)}
                 >
-                  <option value="all">Todos</option>
+                  <option value="all">Todos ⇕</option>
                   <option value="green">100%</option>
                   <option value="yellow">Pendente</option>
                   <option value="red">Urgente</option>
@@ -182,7 +182,7 @@ export function Atm() {
               </div>
             </div>
             <div className="App mt-5 flex items-center justify-center">
-              <div className="flex flex-wrap gap-6 sm:gap-4 md:gap-6 lg:gap-8">
+            <div className="flex flex-wrap gap-6 sm:gap-4 md:gap-6 lg:gap-8">
                 {currentATMs.map((atm) => {
                   sendSMS(atm);
                   return <ATMCard key={atm.id} atm={atm} />;
@@ -225,3 +225,4 @@ export function Atm() {
 }
 
 export default Atm;
+

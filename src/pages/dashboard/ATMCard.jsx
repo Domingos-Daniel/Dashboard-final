@@ -1,13 +1,17 @@
 import React, { useState } from "react";
+import Bounce from 'react-reveal/Bounce';
+import Zoom from 'react-reveal/Zoom';
 
 const ATMCard = ({ atm }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false); // Estado para controlar a animação de carregamento
 
   const cash = atm.cash;
   const systemStatus = atm.systemStatus;
   const papel = atm.coins;
   const integridade = atm.integrity;
+  let st = 0;
 
   let cardColor = "bg-red-500"; // Cor padrão vermelha
   let spanColor = "bg-primary"; // Cor padrão para o span
@@ -17,11 +21,13 @@ const ATMCard = ({ atm }) => {
 
   if (cash > 30000 && integridade >= 50 && papel > 1000) {
     cardColor = "bg-green-500"; // Cor verde
+    st = 1;
   } else if (
     (cash > 10000 && cash <= 30000) ||
     (integridade < 50 && integridade >= 30) ||
     (papel > 500 && papel < 1000)
   ) {
+    st = 2;
     cardColor = "bg-yellow-500"; // Cor de aviso
   }
   if (cash > 70000) {
@@ -48,18 +54,23 @@ const ATMCard = ({ atm }) => {
     setIsModalOpen(true);
   };
 
-  
   const openSecondModal = () => {
     setIsSecondModalOpen(true);
     setIsModalOpen(false); // Feche o primeiro modal quando o segundo é aberto
   };
+  
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
- 
+
+  const currentDate = new Date();
+const formattedDate = `${currentDate.getDate()}/${
+  currentDate.getMonth() + 1
+}/${currentDate.getFullYear()}`;
+
   return (
-    <div className="relative my-4 w-64 rounded-lg bg-white py-6 px-6 shadow-md">
+   <div className="relative my-4 w-64 rounded-lg bg-white py-6 px-6 shadow-md">
       <div
         onClick={openModal}
         className={`absolute left-4 -top-6 flex cursor-pointer items-center rounded-full py-4 px-4 text-white shadow-xl ${cardColor}`}
@@ -168,25 +179,25 @@ const ATMCard = ({ atm }) => {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-96 rounded-lg font-semibold bg-white p-4">
-          <div className="flex justify-end">
-        <button onClick={closeModal}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-gray-600 hover:text-gray-800 cursor-pointer"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
+          <div className="w-96 rounded-lg bg-white p-4 font-semibold">
+            <div className="flex justify-end">
+              <button onClick={closeModal}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 cursor-pointer text-gray-600 hover:text-gray-800"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
             <p className="mb-2 text-xl font-semibold">{atm.name}</p>
             <p className="pb-2">ID: {atm.id}</p>
             <p className="pb-2">Nome: {atm.name}</p>
@@ -196,7 +207,7 @@ const ATMCard = ({ atm }) => {
                 {" "}
                 {/* Adicionando a classe animate-pulse */}A integridade está
                 muito baixa e necessita de assistência.
-              </p> 
+              </p>
             )}
             {atm.cash < 70000 && (
               <p className="animate-pulse border-b pb-2 text-red-500">
@@ -243,111 +254,193 @@ const ATMCard = ({ atm }) => {
           </div>
         </div>
       )}
-{isSecondModalOpen && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    
-    <div className="w-1/2 rounded-lg font-semibold bg-white p-6">
-      <p className="mb-4 text-2xl font-semibold text-center">{atm.name}</p>
-      <div className="border-b border-gray-300 mb-4">
-        <p className="mb-2 text-lg font-semibold">Informações Adicionais</p>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="h-6 w-6 mr-2 text-blue-500"
+      {isSecondModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-1/2 rounded-lg bg-white p-6 font-semibold">
+            <p className="mb-4 text-center text-2xl font-semibold">
+              {atm.name}
+            </p>
+            <div className="mb-4 border-b border-gray-300">
+              <p className="mb-2 text-lg font-semibold">
+                Informações Adicionais
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  {st === 0 && (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        className="mr-2 h-6 w-6 text-red-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                      <p>Urgente</p>
+                    </>
+                  )}
+                  {st === 2 && (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        className="mr-2 h-6 w-6 text-yellow-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                      <p>Pendente</p>
+                    </>
+                  )}
+                  {st === 1 && (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        className="mr-2 h-6 w-6 text-blue-500"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                      <p>100%</p>
+                    </>
+                  )}
+                </div>
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="mr-2 h-6 w-6 text-yellow-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <p>F Recarga de Dinheiro: <strong className="font-bold">Bidiario</strong></p>
+                </div>
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="mr-2 h-6 w-6 text-red-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <p>F Recarga de Papel: Semanal</p>
+                </div>
+              </div>
+            </div>
+            <div className="mb-4 border-b border-gray-300">
+              {/* Detalhes do Histórico aqui com base no ATM selecionado */}
+              <div className="mb-4 border-b border-gray-300">
+                <p className="mb-2 text-lg font-semibold">Histórico</p>
+                {st === 1 && (
+                  <p>
+                    Este ATM está em pleno funcionamento e tem sido mantido
+                    regularmente desde a instalação.
+                  </p>
+                )}
+                {st === 2 && (
+                  <p>
+                    Algumas questões foram relatadas no passado, mas foram
+                    resolvidas oportunamente pela equipe de manutenção.
+                  </p>
+                )}
+                {st === 0 && (
+                  <p>
+                    Problemas críticos têm ocorrido com frequência recentemente,
+                    exigindo intervenções imediatas para garantir o
+                    funcionamento contínuo do ATM.
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="mb-4 border-b border-gray-300">
+              
+              {/* Detalhes do Histórico de Manutenção aqui com base no ATM selecionado */}
+              <div className="mb-4 border-b border-gray-300">
+                <p className="mb-2 text-lg font-semibold">
+                  Histórico de Manutenção
+                </p>
+                {st = 1 && (
+                  <>
+                    <p>
+                      Nenhum problema de manutenção foi registrado desde a
+                      instalação.
+                    </p>
+                    <p>
+                      A manutenção preventiva tem sido realizada regularmente.
+                    </p>
+                  </>
+                )}
+                {st = 2 && (
+                  <>
+                    <p>
+                      A manutenção foi realizada para resolver problemas
+                      anteriores, incluindo problemas com a dispensação de
+                      dinheiro e travamentos ocasionais do sistema.
+                    </p>
+                    <p>
+                      A última manutenção foi realizada em {formattedDate} {" "}
+                      .
+                    </p>
+                  </>
+                )}
+                {st = 0 && (
+                  <>
+                    <p>
+                      Problemas críticos têm exigido manutenções frequentes,
+                      incluindo substituições de componentes e ajustes regulares
+                      para garantir o funcionamento contínuo do ATM.
+                    </p>
+                    <p>
+                      A última manutenção foi realizada em {" "}
+                      {atm.lastMaintenanceDate} devido a
+                      {atm.lastMaintenanceIssue}.
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+            <button
+              onClick={() => setIsSecondModalOpen(false)}
+              className="float-right mt-6 rounded-md bg-blue-500 py-2 px-4 text-white"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
-            <p>Frequência de Uso: Alta</p>
-          </div>
-          <div className="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="h-6 w-6 mr-2 text-yellow-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
-            <p>Frequência de Recarga de Dinheiro: Mensal</p>
-          </div>
-          <div className="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="h-6 w-6 mr-2 text-red-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
-            <p>Frequência de Recarga de Papel: Semanal</p>
+              Fechar Detalhes
+            </button>
           </div>
         </div>
-      </div>
-      <div className="border-b border-gray-300 mb-4">
-        <p className="mb-2 text-lg font-semibold">Histórico</p>
-        <p>
-          O ATM foi instalado em 15 de setembro de 2023 na Rua Principal.
-          Frequência de recarga de dinheiro: Mensal.
-          Frequência de recarga de papel: Semanal.
-        </p>
-        <p>
-          Data da última recarga de dinheiro: 10 de outubro de 2023.
-          Data da última recarga de papel: 5 de outubro de 2023.
-        </p>
-        <p>
-          Frequência com que o dinheiro acaba: Uma vez a cada 3 semanas.
-          Frequência com que o papel acaba: Uma vez por semana.
-        </p>
-      </div>
-      <div className="border-b border-gray-300 mb-4">
-        <p className="mb-2 text-lg font-semibold">Histórico de Manutenção</p>
-        <p>
-          Problema relatado: Falha no dispensador de dinheiro.
-          Data de relato: 12 de novembro de 2023.
-          Ação tomada: Substituição do dispensador.
-        </p>
-        <p>
-          Problema relatado: Sistema travado.
-          Data de relato: 5 de outubro de 2023.
-          Ação tomada: Reinicialização do sistema.
-        </p>
-        <p>
-          Problema relatado: Impressora com defeito.
-          Data de relato: 18 de setembro de 2023.
-          Ação tomada: Substituição da impressora.
-        </p>
-      </div>
-      <button
-        onClick={() => setIsSecondModalOpen(false)}
-        className="mt-6 rounded-md bg-blue-500 py-2 px-4 text-white float-right"
-      >
-        Fechar Detalhes
-      </button>
-    </div>
-  </div>
-)}
-
+      )}
     </div>
   );
 };
