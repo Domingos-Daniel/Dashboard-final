@@ -46,8 +46,8 @@ Footer.defaultProps = {
   routes: [
     { name: "SafeQ", path: "https://www.safeq-ao.com" },
     { name: "Acerca de Nós", path: "https://www.safeq-ao.ao" },
-    { name: "Blog", path: "https://www.creative-tim.com/blog" },
-    { name: "Licença", path: "https://www.creative-tim.com/license" },
+    { name: "Blog", path: "https://www.safeq-ao.com" },
+    { name: "Licença", path: "https://www.safeq-ao.com" },
   ],
 };
 
