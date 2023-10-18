@@ -14,7 +14,7 @@ export function SignIn() {
   return (
     <>
       <img
-        src="https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80"
+        src="http://www.bfa.ao/images/image-share.jpg"
         className="absolute inset-0 z-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
@@ -26,21 +26,21 @@ export function SignIn() {
             className="mb-4 grid h-28 place-items-center"
           >
             <Typography variant="h3" color="white">
-              Sign In
+              Login
             </Typography>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
             <Input type="email" label="Email" size="lg" />
             <Input type="password" label="Password" size="lg" />
             <div className="-ml-2.5">
-              <Checkbox label="Remember Me" />
+              <Checkbox label="Lembrar-me" />
             </div>
           </CardBody>
           <CardFooter className="pt-0">
             <Button variant="gradient" fullWidth>
-              Sign In
+              Entrar
             </Button>
-            <Typography variant="small" className="mt-6 flex justify-center">
+            <Typography variant="small" className="mt-6 flex justify-center hidden">
               Don't have an account?
               <Link to="/auth/sign-up">
                 <Typography
