@@ -70,7 +70,7 @@ const ATMByAgency = () => {
   return (
     <div className="container mx-auto mt-8 p-4">
       <h1 className="mb-4 text-2xl font-semibold">
-        Pesquisar ATMs
+        ATMs por agências 
       </h1>
       <div className="mb-4 flex items-center space-x-2">
         <select

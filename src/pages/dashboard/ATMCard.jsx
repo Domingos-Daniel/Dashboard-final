@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Bounce from 'react-reveal/Bounce';
-import Zoom from 'react-reveal/Zoom';
 
 const ATMCard = ({ atm }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,6 +90,7 @@ const formattedDate = `${currentDate.getDate()}/${
       </div>
       <div className="mt-8">
         <p className="my-2 text-xl font-semibold">{atm.name}</p>
+        
         <div className="flex space-x-2 text-sm text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"

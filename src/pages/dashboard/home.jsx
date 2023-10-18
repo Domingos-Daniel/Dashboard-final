@@ -30,6 +30,7 @@ import {
   ordersOverviewData,
 } from "@/data";
 import chartData from "../../data/line-chart-data-01"; // Importe os dados do gráfico
+import Slider from './Slider';
 
 import DataSyncComponent from "../../DataSyncComponent";
 import PieChart from "@/widgets/charts/PieChart";
@@ -37,6 +38,7 @@ import RealtimeATMStatusComponent from "@/widgets/charts/RealtimeATMStatusCompon
 export function Home() {
   return (
     <div className="mt-12">
+      <Slider />
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
         {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
           <StatisticsCard

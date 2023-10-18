@@ -1,0 +1,53 @@
+.slider {
+    background-color: rgba(38, 50, 56, 0.9); /* Fundo transparente preto */
+    height: 70px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    margin-bottom: 6%;
+    border-radius: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .slide-track {
+    display: flex;
+    animation: scroll 40s linear infinite;
+  }
+  
+  .slide {
+    height: 60px;
+    min-width: 80px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #ddd;
+    color:#f2eded;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Estilos condicionais para diferentes tipos de ATMs */
+  .slide.green {
+    background-color: green;
+  }
+  
+  .slide.yellow {
+    background-color: yellow;
+  }
+  
+  .slide.red {
+    background-color: red;
+  }
+  
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
