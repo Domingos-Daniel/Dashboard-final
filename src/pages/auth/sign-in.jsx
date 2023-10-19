@@ -29,9 +29,10 @@ export function SignIn() {
       .then((userCredential) => {
         toast.success("Login bem-sucedido! Redirecionando para a página inicial...");
         setTimeout(() => {
-          window.location.href = "/home"; // Redirecionamento manual
-        }, 5000);
-        console.log("Login bem sucedido para:", user);
+          alert("Sucesso no Login, bem vindo "+email);
+        }, 2000);
+        localStorage.setItem("userEmail", email);
+        console.log("Login bem sucedido para:", email);
         // Adicione lógica adicional aqui para lidar com o redirecionamento ou outras ações após o login bem-sucedido
       })
       .catch((error) => {
