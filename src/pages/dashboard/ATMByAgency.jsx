@@ -11,7 +11,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import firebaseApp from "./firebaseConfig";
+import firebaseApp from "@/firebaseConfig";
 import ATMCard from "./ATMCard"; // Certifique-se de fornecer o caminho correto para o seu componente ATMCard
 
 const db = getFirestore(firebaseApp);

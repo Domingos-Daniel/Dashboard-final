@@ -37,28 +37,43 @@ export function SignUp() {
   const [password, setPassword] = useState("");
 
  // ... restante do código
+// Restante do seu código...
 
-const handleSignUp = async (e) => {
+const handleSignUp = (e) => {
   e.preventDefault();
 
-  if (!email || !password) {
-    console.error("Email and password fields are required");
-    // Adicione lógica adicional aqui para notificar o usuário sobre os campos obrigatórios
+  // Verifica se os campos de e-mail, senha e nome estão preenchidos
+  if (!email || !password || !name) {
+    console.error("Email, password, and name fields are required");
     return;
   }
 
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    console.log("Sign up successful for:", user);
-    // Adicione lógica adicional aqui para lidar com o redirecionamento ou outras ações após o registro bem-sucedido
-  } catch (error) {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.error("Sign up failed with error:", errorMessage);
-    // Adicione lógica adicional aqui para lidar com a exibição de mensagens de erro para o usuário
-  }
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+
+      // Atualize o perfil do usuário com o nome
+      updateProfile(user, {
+        displayName: name
+      }).then(() => {
+        // Atualização do perfil bem-sucedida
+        console.log("Profile updated for:", user);
+      }).catch((error) => {
+        // Tratamento de erros na atualização do perfil
+        console.error("Error updating profile:", error);
+      });
+
+      console.log("Sign up successful for:", user);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error("Sign up failed with error:", errorMessage);
+    });
 };
+
+// Restante do seu código...
+
 
 // ... restante do código
 

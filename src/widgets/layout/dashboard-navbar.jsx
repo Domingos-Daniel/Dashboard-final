@@ -25,6 +25,7 @@ import {
   setOpenConfigurator,
   setOpenSidenav,
 } from "@/context";
+import LogoutButton from "@/pages/auth/LogoutButton";
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -83,6 +84,7 @@ export function DashboardNavbar() {
           >
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
           </IconButton>
+          <LogoutButton />
           <Link to="/auth/sign-in">
             <Button
               variant="text"

@@ -7,7 +7,7 @@ import {
   collection,
   addDoc, // Use addDoc to add documents to the collection
 } from 'firebase/firestore';
-import firebaseApp from '@/pages/dashboard/firebaseConfig'; // Adjust the import path as needed
+import firebaseApp from '@/firebaseConfig'; // Adjust the import path as needed
 
 function DataSyncComponent() {
   useEffect(() => {
