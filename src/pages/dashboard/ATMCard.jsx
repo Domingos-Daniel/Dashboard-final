@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CashFlowRecord from './CashFlowRecord';
 
 const ATMCard = ({ atm }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,6 +56,16 @@ const ATMCard = ({ atm }) => {
   const openSecondModal = () => {
     setIsSecondModalOpen(true);
     setIsModalOpen(false); // Feche o primeiro modal quando o segundo é aberto
+  };
+
+  const [isCashFlowModalOpen, setIsCashFlowModalOpen] = useState(false);
+
+  const openCashFlowModal = () => {
+    setIsCashFlowModalOpen(true);
+  };
+
+  const closeCashFlowModal = () => {
+    setIsCashFlowModalOpen(false);
   };
   
 
@@ -171,10 +182,24 @@ const formattedDate = `${currentDate.getDate()}/${
             <p className="mb-2 text-base font-semibold">Integridade</p>
             <div className="text-base font-semibold text-gray-400">
               <p>{atm.integrity}%</p>
+              <button onClick={openCashFlowModal}>Ver Fluxo de Caixa</button>
             </div>
           </div>
         </div>
       </div>
+
+      {isCashFlowModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-1/2 rounded-lg bg-white p-6 font-semibold shadow-md">
+            <div className="flex justify-end">
+            <span className="close" onClick={closeCashFlowModal}>
+              &times;
+            </span>
+            </div>
+            <CashFlowRecord atm={atm} />
+          </div>
+        </div>
+      )}
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
