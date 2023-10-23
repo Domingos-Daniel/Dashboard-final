@@ -21,7 +21,7 @@ const ErrorLogs = ({ atm }) => {
     errorFrequency: Array.from({ length: 7 }, () => Math.floor(Math.random() * 9) + 1),
     possibleErrors: [
       'Falha ao dispensar dinheiro',
-      'Falha na leitura do cartão',
+      'Falha na leitura de cartões',
       'Erro de conexão com o banco',
       'Falha no sistema de segurança',
       'Erro de manutenção',
