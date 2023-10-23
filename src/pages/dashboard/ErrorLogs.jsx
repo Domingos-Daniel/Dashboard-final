@@ -9,7 +9,7 @@ const ErrorLogs = ({ atm }) => {
     ),
     possibleErrors: [
       "Falha ao dispensar dinheiro",
-      "Falha na leitura do cartão",
+      "Falha na leitura de cartões",
       "Erro de conexão com o banco",
       "Falha no sistema de segurança",
       "Erro de manutenção",
