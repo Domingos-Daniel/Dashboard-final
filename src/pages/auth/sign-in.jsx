@@ -88,7 +88,7 @@ export function SignIn() {
             <Button variant="gradient" fullWidth onClick={handleSignIn}>
               Entrar
             </Button>
-            <Typography variant="small" className="mt-6 flex justify-center">
+            <Typography variant="small" className="mt-6 flex justify-center hidden">
               Don't have an account?
               <Link to="/auth/sign-up">
                 <Typography
