@@ -50,7 +50,7 @@ export function SignIn() {
     
     <ToastContainer />
       <img
-        src="http://www.bfa.ao/images/image-share.jpg"
+        src="https://www.verangola.net/va/images/cms-image-000018011.jpg"
         className="absolute inset-0 z-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
