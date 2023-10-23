@@ -7,7 +7,7 @@ const CashFlowRecord = ({ atm }) => {
     rechargeDates: ["2023-09-20", "2023-09-15", "2023-09-10"],
     usagePeriod: "Diurno",
     popularService: generateRandomService(),
-    averageWithdrawalAmount: Math.floor(Math.random() * 50000) + 1,
+    averageWithdrawalAmount: "30.000 Kzs",
     serviceData: {
       labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
       series: [
@@ -25,42 +25,50 @@ const CashFlowRecord = ({ atm }) => {
         },
       ],
     },
+    errorData: {
+      labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+      series: [
+        {
+          name: "Erros",
+          data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 10) + 1),
+        },
+      ],
+    },
   });
 
-  const { rechargeDates, usagePeriod, popularService, averageWithdrawalAmount, serviceData } = cashFlowData;
-   // Lógica sugestiva com base nos dados do gráfico
-
-   
   function generateRandomService() {
-    const services = ["Levantamentos", "Consultas", "Transferências", ""];
+    const services = ["Levantamentos", "Consultas", "Transferências"];
     const randomIndex = Math.floor(Math.random() * services.length);
     return services[randomIndex];
   }
 
-   let suggestion = "";
-   if (popularService === "Levantamentos") {
-     suggestion = "Prioridade de recarga de dinheiro nos dias em que há maior fluxo.";
-   } else if (popularService === "Transferências" || popularService === "Consultas") {
-     suggestion = "Prioridade de recarga de papel.";
-   } else {
-     suggestion = "Recarga de papel e dinheiro neste ATM em função da métrica.";
-   }
+  const { rechargeDates, usagePeriod, popularService, averageWithdrawalAmount, serviceData, errorData } = cashFlowData;
+
+  // Lógica sugestiva com base nos dados do gráfico
+  let suggestion = "";
+  if (popularService === "Levantamentos") {
+    suggestion = "Prioridade de recarga de dinheiro nos dias em que há maior fluxo.";
+  } else if (popularService === "Transferências" || popularService === "Consultas") {
+    suggestion = "Prioridade de recarga de papel.";
+  } else {
+    suggestion = "Recarga de papel e dinheiro neste ATM em função da métrica.";
+  }
 
   return (
-    <div className="bg-white p-4 rounded-lg w-4/6 h-4/6">
+    <div className="bg-white p-4 rounded-lg w-4/6 h-4/6 overflow-y: auto">
       <h2 className="text-2xl font-bold mb-4">Registro de Fluxo de Caixa</h2>
       <p className="mb-2"><strong>Datas de Recarga:</strong> {rechargeDates.join(', ')}</p>
       <p className="mb-2"><strong>Período de Uso:</strong> {usagePeriod}</p>
       <p className="mb-2"><strong>Serviço mais Popular:</strong> {popularService}</p>
       <p className="mb-4"><strong>Média de Levantamento:</strong> {averageWithdrawalAmount}</p>
-      <div className="bg-white p-4 rounded-lg">
+      <div className="bg-white p-4 rounded-lg mb-4">
         <Chart
           options={{
             chart: {
               height: 350,
               type: 'line',
               zoom: {
-                enabled: true
+                enabled: false
               }
             },
             dataLabels: {
@@ -88,8 +96,9 @@ const CashFlowRecord = ({ atm }) => {
           height={320}
         />
       </div>
-      <p className="mt-4"><strong>Sugestão:</strong> {suggestion}</p>
-    
+      
+      <p className="mb-4"><strong>Sugestão:</strong> {suggestion}</p>
+     
     </div>
   );
 };
