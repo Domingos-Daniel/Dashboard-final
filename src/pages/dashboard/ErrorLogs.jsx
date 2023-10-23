@@ -1,30 +1,18 @@
-import React, { useState } from 'react';
-import Chart from 'react-apexcharts';
-import { saveAs } from 'file-saver';
+import React, { useState } from "react";
+import Chart from "react-apexcharts";
 
 const ErrorLogs = ({ atm }) => {
-    const downloadCSV = () => {
-        const csvContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(errorData.join('\n'));
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        saveAs(blob, 'error_logs.csv');
-      };
-    
-      const downloadPNG = () => {
-        const chartRef = React.createRef();
-        const chart = chartRef.current.chart.ctx;
-        chart.canvas.toBlob(function (blob) {
-          saveAs(blob, 'error_logs.png');
-        });
-      };
-    
   const [errorLogsData, setErrorLogsData] = useState({
-    errorFrequency: Array.from({ length: 7 }, () => Math.floor(Math.random() * 9) + 1),
+    errorFrequency: Array.from(
+      { length: 7 },
+      () => Math.floor(Math.random() * 9) + 1
+    ),
     possibleErrors: [
-      'Falha ao dispensar dinheiro',
-      'Falha na leitura de cartões',
-      'Erro de conexão com o banco',
-      'Falha no sistema de segurança',
-      'Erro de manutenção',
+      "Falha ao dispensar dinheiro",
+      "Falha na leitura do cartão",
+      "Erro de conexão com o banco",
+      "Falha no sistema de segurança",
+      "Erro de manutenção",
     ],
   });
 
@@ -40,26 +28,20 @@ const ErrorLogs = ({ atm }) => {
     } else if (maxErrorFrequency >= 5) {
       return `Realizar uma verificação geral para evitar ${frequentError} recorrente`;
     } else {
-      return 'O ATM está operando dentro do limite aceitável de erros.';
+      return "O ATM está operando dentro do limite aceitável de erros.";
     }
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg w-4/6 h-4/6 overflow-y: auto">
-      <h2>Logs de Erros nos Últimos 7 Dias do  {atm.name}</h2>
-      <button onClick={downloadCSV} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 mr-2 rounded mt-4">
-        Baixar como CSV
-      </button>
-      <button onClick={downloadPNG} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mt-4">
-        Baixar como PNG
-      </button>
+    <div className="overflow-y: auto h-4/6 w-4/6 rounded-lg bg-white p-4">
+      <h2>Logs de Erros nos Últimos 7 Dias do {atm.name}</h2>
       <Chart
         options={{
           chart: {
-            id: 'errorLogs',
+            id: "errorLogs",
             animations: {
               enabled: true,
-              easing: 'easeinout',
+              easing: "easeinout",
               speed: 800,
               animateGradually: {
                 enabled: true,
@@ -71,13 +53,15 @@ const ErrorLogs = ({ atm }) => {
               },
             },
           },
-          xaxis: { categories: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] },
-          plotOptions: { bar: { horizontal: false, barHeight: '50%' } },
-          fill: { colors: ['#F87171'] },
+          xaxis: {
+            categories: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+          },
+          plotOptions: { bar: { horizontal: false, barHeight: "50%" } },
+          fill: { colors: ["#F87171"] },
         }}
         series={[
           {
-            name: 'Frequência de Erros',
+            name: "Frequência de Erros",
             data: errorFrequency,
           },
         ]}
@@ -87,9 +71,10 @@ const ErrorLogs = ({ atm }) => {
       />
       <div className="mt-4">
         <p>
-          Nos últimos 7 dias, foram registrados os seguintes erros no ATM {atm.name}:
+          Nos últimos 7 dias, foram registrados os seguintes erros no ATM{" "}
+          {atm.name}:
         </p>
-        <ul className="list-disc list-inside mt-2">
+        <ul className="mt-2 list-inside list-disc">
           {possibleErrors.map((error, index) => (
             <li key={index}>{error}</li>
           ))}
