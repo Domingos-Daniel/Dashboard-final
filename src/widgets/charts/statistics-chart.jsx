@@ -103,4 +103,4 @@ StatisticsChart.propTypes = {
 
 StatisticsChart.displayName = "/src/widgets/charts/statistics-chart.jsx";
 
-export default StatisticsChart;
+export default StatisticsChart;  
