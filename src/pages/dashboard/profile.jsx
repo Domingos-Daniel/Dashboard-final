@@ -25,7 +25,7 @@ import NumeroFormulario from './NumeroFormulario';
 export function Profile() {
   return (
     <>
-      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://www.verangola.net/va/images/cms-image-000018011.jpg)] bg-cover	bg-top">
+      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(http://www.bfa.ao/images/image-share.jpg)] bg-cover	bg-top">
         <div className="absolute inset-0 h-full w-full bg-blue-500/50" />
       </div>
       <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
@@ -33,7 +33,7 @@ export function Profile() {
           <div className="mb-10 flex items-center justify-between gap-6">
             <div className="flex items-center gap-6">
               <Avatar
-                src="https://png.pngtree.com/png-clipart/20190516/original/pngtree-users-vector-icon-png-image_3725294.jpg"
+                src="https://www.bing.com/images/create/user-profile-black-man/65383253a1f64d6eb59589e12a261d6c?id=%2fv11u21YDlQpxUxpvm0kRg%3d%3d&view=detailv2&idpp=genimg&FORM=GCRIDP&mode=overlay"
                 alt="bruce-mars"
                 size="xl"
                 className="rounded-lg shadow-lg shadow-blue-gray-500/40"
