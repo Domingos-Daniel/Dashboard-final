@@ -16,7 +16,7 @@ import SearchATM from "@/pages/dashboard/SearchATM";
 import ATMByAgency from "./pages/dashboard/ATMByAgency";
 import ATMCharts from "@/pages/dashboard/ATMCharts";
 import { SignIn, SignUp } from "@/pages/auth";
-
+import App from "@/pages/permissions/App";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -38,21 +38,21 @@ export const routes = [
         path: "/atm",
         element: <Atm />,
       },
-      
+
       {
         icon: <ChartBarIcon {...icon} />,
         name: "Gráficos & Analytics",
         path: "/analytcs",
         element: <ATMCharts />,
       },
-      
+
       {
         icon: <MagnifyingGlassCircleIcon {...icon} />,
         name: "Pesquisar ATM",
         path: "/search",
         element: <SearchATM />,
       },
-      
+
       {
         icon: <HomeModernIcon {...icon} />,
         name: "Agências",
@@ -66,6 +66,12 @@ export const routes = [
         path: "/profile",
         element: <Profile />,
       },
+      {
+        icon: <UserCircleIcon {...icon} />,
+        name: "Permissões",
+        path: "/permissions",
+        element: <App />,
+      },
     ],
   },
   {
@@ -74,13 +80,13 @@ export const routes = [
     pages: [
       {
         icon: <ArrowRightOnRectangleIcon {...icon} />,
-        name: "sign in",
+        name: "Ajustes",
         path: "/sign-in",
         element: <SignIn />,
       },
       {
         icon: <UserPlusIcon {...icon} />,
-        name: "sign up",
+        name: "Adicionar Gestor",
         path: "/sign-up",
         element: <SignUp />,
       },

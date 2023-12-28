@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ATMCard from "./ATMCard";
-import ATMList from "./ATMList";
+import ATMList from "./ATMList"; 
 import PaginationButtons from "./PaginationButtons";
-import { 
+import {
   Tabs,
   TabsHeader,
   TabsBody,
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import { apiUrl } from '../../apiConfig';
+import { apiUrl } from "../../apiConfig";
 
 export function Atm() {
   const [atms, setATMs] = useState([]);
@@ -51,12 +51,9 @@ export function Atm() {
     } else if (color === "yellow") {
       return atms.filter(
         (atm) =>
-          atm.cash > 10000 &&
-          atm.cash <= 30000 ||
-          atm.integrity < 50 &&
-          atm.integrity >= 30 ||
-          atm.coins > 500 &&
-          atm.coins < 1000
+          (atm.cash > 10000 && atm.cash <= 30000) ||
+          (atm.integrity < 50 && atm.integrity >= 30) ||
+          (atm.coins > 500 && atm.coins < 1000)
       );
     } else if (color === "red") {
       return atms.filter(
@@ -83,7 +80,7 @@ export function Atm() {
     const details = {
       To: to,
       From: from,
-      Body: text
+      Body: text,
     };
 
     const formBody = [];
@@ -98,9 +95,9 @@ export function Atm() {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        Authorization: auth
+        Authorization: auth,
       },
-      body: requestBody
+      body: requestBody,
     };
 
     fetch(url, options)
@@ -123,8 +120,13 @@ export function Atm() {
       if (coins < 1000) issues.push(`Papel baixo com ${coins} unidades`);
     }
 
-    if (issues.length > 0 && processedATMIds.filter(atmId => atmId === id).length < 2) {
-      const message = `ATM ID ${id} (${managerName}) está prestes a ficar sem ${issues.join(", ")}. Por favor, verifique.`;
+    if (
+      issues.length > 0 &&
+      processedATMIds.filter((atmId) => atmId === id).length < 2
+    ) {
+      const message = `ATM ID ${id} (${managerName}) está prestes a ficar sem ${issues.join(
+        ", "
+      )}. Por favor, verifique.`;
 
       const currentTimestamp = Date.now();
       if (
@@ -182,7 +184,7 @@ export function Atm() {
               </div>
             </div>
             <div className="App mt-5 flex items-center justify-center">
-            <div className="flex flex-wrap gap-6 sm:gap-4 md:gap-6 lg:gap-8">
+              <div className="flex flex-wrap gap-6 sm:gap-4 md:gap-6 lg:gap-8">
                 {currentATMs.map((atm) => {
                   sendSMS(atm);
                   return <ATMCard key={atm.id} atm={atm} />;
@@ -225,4 +227,3 @@ export function Atm() {
 }
 
 export default Atm;
-

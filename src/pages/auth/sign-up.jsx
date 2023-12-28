@@ -13,7 +13,6 @@ import {
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-
 // Configurações do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyA3pjjhao5HhdPfJRonDi6cQAwwPmM3KN0",
@@ -22,7 +21,7 @@ const firebaseConfig = {
   storageBucket: "bni-atm.appspot.com",
   messagingSenderId: "1087416068939",
   appId: "1:1087416068939:web:36f4337c62b9747de496ce",
-  measurementId: "G-FL067VKJ6W"
+  measurementId: "G-FL067VKJ6W",
 };
 
 // Inicialização do app e autenticação
@@ -36,54 +35,51 @@ export function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
- // ... restante do código
-// Restante do seu código...
+  const handleSignUp = (e) => {
+    e.preventDefault();
 
-const handleSignUp = (e) => {
-  e.preventDefault();
+    // Verifica se os campos de e-mail, senha e nome estão preenchidos
+    if (!email || !password || !name) {
+      console.error("Email, password, and name fields are required");
+      return;
+    }
 
-  // Verifica se os campos de e-mail, senha e nome estão preenchidos
-  if (!email || !password || !name) {
-    console.error("Email, password, and name fields are required");
-    return;
-  }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
+        // Atualize o perfil do usuário com o nome
+        updateProfile(user, {
+          displayName: name,
+        })
+          .then(() => {
+            // Atualização do perfil bem-sucedida
+            console.log("Profile updated for:", user);
+          })
+          .catch((error) => {
+            // Tratamento de erros na atualização do perfil
+            console.error("Error updating profile:", error);
+          });
 
-      // Atualize o perfil do usuário com o nome
-      updateProfile(user, {
-        displayName: name
-      }).then(() => {
-        // Atualização do perfil bem-sucedida
-        console.log("Profile updated for:", user);
-      }).catch((error) => {
-        // Tratamento de erros na atualização do perfil
-        console.error("Error updating profile:", error);
+        console.log("Sign up successful for:", user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Sign up failed with error:", errorMessage);
       });
+  };
 
-      console.log("Sign up successful for:", user);
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error("Sign up failed with error:", errorMessage);
-    });
-};
+  // Restante do seu código...
 
-// Restante do seu código...
-
-
-// ... restante do código
-
+  // ... restante do código//https://www.verangola.net/va/images/cms-image-000018011.jpg
 
   // Retorno do componente
   return (
     <>
       {/* Imagem de fundo e sobreposição */}
       <img
-        src="https://www.verangola.net/va/images/cms-image-000018011.jpg"
+        src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/d329ae104730575.5f69b0c1589e9.jpg"
         className="absolute inset-0 z-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
@@ -96,7 +92,7 @@ const handleSignUp = (e) => {
             className="mb-4 grid h-28 place-items-center"
           >
             <Typography variant="h3" color="white">
-              Registo 
+              Registo
             </Typography>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CashFlowRecord from './CashFlowRecord';
+import CashFlowRecord from "./CashFlowRecord";
 import ErrorLogs from "./ErrorLogs";
 
 const ATMCard = ({ atm }) => {
@@ -75,19 +75,18 @@ const ATMCard = ({ atm }) => {
   const closeErrorLogsModal = () => {
     setIsErrotLogsModalOpen(false);
   };
-  
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
   const currentDate = new Date();
-const formattedDate = `${currentDate.getDate()}/${
-  currentDate.getMonth() + 1
-}/${currentDate.getFullYear()}`;
+  const formattedDate = `${currentDate.getDate()}/${
+    currentDate.getMonth() + 1
+  }/${currentDate.getFullYear()}`;
 
   return (
-   <div className="relative my-4 w-64 rounded-lg bg-white py-6 px-6 shadow-md">
+    <div className="relative my-4 w-64 rounded-lg bg-white py-6 px-6 shadow-md">
       <div
         onClick={openModal}
         className={`absolute left-4 -top-6 flex cursor-pointer items-center rounded-full py-4 px-4 text-white shadow-xl ${cardColor}`}
@@ -109,7 +108,7 @@ const formattedDate = `${currentDate.getDate()}/${
       </div>
       <div className="mt-8">
         <p className="my-2 text-xl font-semibold">{atm.name}</p>
-        
+
         <div className="flex space-x-2 text-sm text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -190,14 +189,42 @@ const formattedDate = `${currentDate.getDate()}/${
             <p className="mb-2 text-base font-semibold">Integridade</p>
             <div className="text-base font-semibold text-gray-400">
               <p>{atm.integrity}%</p>
-              <button className="mt-2 rounded-md bg-blue-500 py-2 px-4 text-white" onClick={openCashFlowModal}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" />
+              <button
+                className="mt-2 rounded-md bg-blue-500 py-2 px-4 text-white"
+                onClick={openCashFlowModal}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"
+                  />
                 </svg>
               </button>
-              <button className="mt-2 rounded-md bg-red-400 py-2 px-4 text-white" onClick={openErrorLogsModal}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
+              <button
+                className="mt-2 rounded-md bg-red-400 py-2 px-4 text-white"
+                onClick={openErrorLogsModal}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"
+                  />
                 </svg>
               </button>
             </div>
@@ -209,9 +236,12 @@ const formattedDate = `${currentDate.getDate()}/${
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="w-1/2 rounded-lg bg-white p-6 font-semibold shadow-md">
             <div className="flex justify-end">
-            <span className="close" onClick={closeCashFlowModal}>
-              &times;
-            </span>
+              <span
+                className="close cursor-pointer"
+                onClick={closeCashFlowModal}
+              >
+                &times;
+              </span>
             </div>
             <CashFlowRecord atm={atm} />
           </div>
@@ -222,9 +252,12 @@ const formattedDate = `${currentDate.getDate()}/${
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="w-1/2 rounded-lg bg-white p-6 font-semibold shadow-md">
             <div className="flex justify-end">
-            <span className="close" onClick={closeErrorLogsModal}>
-              &times;
-            </span>
+              <span
+                className="close cursor-pointer"
+                onClick={closeErrorLogsModal}
+              >
+                &times;
+              </span>
             </div>
             <ErrorLogs atm={atm} />
           </div>
@@ -393,7 +426,10 @@ const formattedDate = `${currentDate.getDate()}/${
                       d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
-                  <p>F Recarga de Dinheiro: <strong className="font-bold">Bidiario</strong></p>
+                  <p>
+                    F Recarga de Dinheiro:{" "}
+                    <strong className="font-bold">Bidiario</strong>
+                  </p>
                 </div>
                 <div className="flex items-center">
                   <svg
@@ -440,50 +476,54 @@ const formattedDate = `${currentDate.getDate()}/${
               </div>
             </div>
             <div className="mb-4 border-b border-gray-300">
-              
               {/* Detalhes do Histórico de Manutenção aqui com base no ATM selecionado */}
               <div className="mb-4 border-b border-gray-300">
                 <p className="mb-2 text-lg font-semibold">
                   Histórico de Manutenção
                 </p>
-                {st = 1 && (
-                  <>
-                    <p>
-                      Nenhum problema de manutenção foi registrado desde a
-                      instalação.
-                    </p>
-                    <p>
-                      A manutenção preventiva tem sido realizada regularmente.
-                    </p>
-                  </>
-                )}
-                {st = 2 && (
-                  <>
-                    <p>
-                      A manutenção foi realizada para resolver problemas
-                      anteriores, incluindo problemas com a dispensação de
-                      dinheiro e travamentos ocasionais do sistema.
-                    </p>
-                    <p>
-                      A última manutenção foi realizada em {formattedDate} {" "}
-                      .
-                    </p>
-                  </>
-                )}
-                {st = 0 && (
-                  <>
-                    <p>
-                      Problemas críticos têm exigido manutenções frequentes,
-                      incluindo substituições de componentes e ajustes regulares
-                      para garantir o funcionamento contínuo do ATM.
-                    </p>
-                    <p>
-                      A última manutenção foi realizada em {" "}
-                      {atm.lastMaintenanceDate} devido a
-                      {atm.lastMaintenanceIssue}.
-                    </p>
-                  </>
-                )}
+                {
+                  (st = 1 && (
+                    <>
+                      <p>
+                        Nenhum problema de manutenção foi registrado desde a
+                        instalação.
+                      </p>
+                      <p>
+                        A manutenção preventiva tem sido realizada regularmente.
+                      </p>
+                    </>
+                  ))
+                }
+                {
+                  (st = 2 && (
+                    <>
+                      <p>
+                        A manutenção foi realizada para resolver problemas
+                        anteriores, incluindo problemas com a dispensação de
+                        dinheiro e travamentos ocasionais do sistema.
+                      </p>
+                      <p>
+                        A última manutenção foi realizada em {formattedDate} .
+                      </p>
+                    </>
+                  ))
+                }
+                {
+                  (st = 0 && (
+                    <>
+                      <p>
+                        Problemas críticos têm exigido manutenções frequentes,
+                        incluindo substituições de componentes e ajustes
+                        regulares para garantir o funcionamento contínuo do ATM.
+                      </p>
+                      <p>
+                        A última manutenção foi realizada em{" "}
+                        {atm.lastMaintenanceDate} devido a
+                        {atm.lastMaintenanceIssue}.
+                      </p>
+                    </>
+                  ))
+                }
               </div>
             </div>
             <button

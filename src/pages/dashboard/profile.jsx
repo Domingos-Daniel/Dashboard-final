@@ -21,11 +21,11 @@ import {
 import { Link } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
 import { platformSettingsData, conversationsData, projectsData } from "@/data";
-import NumeroFormulario from './NumeroFormulario';
+import NumeroFormulario from "./NumeroFormulario";
 export function Profile() {
   return (
     <>
-      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://www.verangola.net/va/images/cms-image-000018011.jpg)] bg-cover	bg-top">
+      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/d329ae104730575.5f69b0c1589e9.jpg)] bg-cover	bg-top">
         <div className="absolute inset-0 h-full w-full bg-blue-500/50" />
       </div>
       <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
@@ -55,7 +55,7 @@ export function Profile() {
                 <TabsHeader>
                   <Tab value="app">
                     <HomeIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-                    Aplicação 
+                    Aplicação
                   </Tab>
                   <Tab value="message">
                     <ChatBubbleLeftEllipsisIcon className="-mt-0.5 mr-2 inline-block h-5 w-5" />
@@ -63,7 +63,7 @@ export function Profile() {
                   </Tab>
                   <Tab value="settings">
                     <Cog6ToothIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-                    Configurações 
+                    Ajustes
                   </Tab>
                 </TabsHeader>
               </Tabs>
@@ -72,7 +72,7 @@ export function Profile() {
           <div className="gird-cols-1 mb-12 grid gap-12 px-4 lg:grid-cols-2 xl:grid-cols-3">
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-3">
-                Configuração da Aplicação 
+                Configuração da Aplicação
               </Typography>
               <div className="flex flex-col gap-12">
                 {platformSettingsData.map(({ title, options }) => (
@@ -122,10 +122,14 @@ export function Profile() {
 
             <NumeroFormulario />
             <div>
-              <Typography variant="h6" color="blue-gray" className="mb-3 hidden">
+              <Typography
+                variant="h6"
+                color="blue-gray"
+                className="mb-3 hidden"
+              >
                 Platform Settings
               </Typography>
-              <ul className="flex flex-col gap-6 hidden">
+              <ul className="flex hidden flex-col gap-6">
                 {conversationsData.map((props) => (
                   <MessageCard
                     key={props.name}
@@ -140,7 +144,7 @@ export function Profile() {
               </ul>
             </div>
           </div>
-          <div className="px-4 pb-4 hidden">
+          <div className="hidden px-4 pb-4">
             <Typography variant="h6" color="blue-gray" className="mb-2">
               Projects
             </Typography>
