@@ -73,13 +73,14 @@ export function SignUp() {
   // Restante do seu código...
 
   // ... restante do código//https://www.verangola.net/va/images/cms-image-000018011.jpg
+  //http://www.bfa.ao/images/image-share.jpg
 
   // Retorno do componente
   return (
     <>
       {/* Imagem de fundo e sobreposição */}
       <img
-        src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/d329ae104730575.5f69b0c1589e9.jpg"
+        src="http://www.bfa.ao/images/image-share.jpg"
         className="absolute inset-0 z-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 z-0 h-full w-full bg-black/50" />
