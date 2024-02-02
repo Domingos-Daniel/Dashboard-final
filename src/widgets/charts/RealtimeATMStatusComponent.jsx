@@ -10,7 +10,7 @@ const RealtimeATMStatusComponent = ({ bgColor }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://my-json-server.typicode.com/Domingos-Daniel/api-teste/atms"
+          "https://atms-app.com/wp/wp-json/custom-atm-api/v1/atms"
         );
         const data = await response.json();
 
@@ -26,7 +26,7 @@ const RealtimeATMStatusComponent = ({ bgColor }) => {
     // Atualize os dados do gráfico a cada segundo
     const interval = setInterval(() => {
       fetchData();
-    }, 1000);
+    }, 500);
 
     // Limpe o intervalo quando o componente for desmontado
     return () => clearInterval(interval);
@@ -34,12 +34,16 @@ const RealtimeATMStatusComponent = ({ bgColor }) => {
 
   const calculateTotals = () => {
     const functional = atms.filter(
-      (atm) => atm.cash > 30000 && atm.integrity >= 50 && atm.coins > 1000
+      (atm) =>
+        atm.cash >= 30000 &&
+        atm.integrity >= 50 &&
+        atm.coins >= 1000 &&
+        atm.systemStatus === "on"
     ).length;
 
     const pending = atms.filter(
       (atm) =>
-        (atm.cash > 10000 && atm.cash <= 30000) ||
+        (atm.cash > 1000 && atm.cash <= 30000) ||
         (atm.integrity >= 30 && atm.integrity < 50) ||
         (atm.coins >= 500 && atm.coins <= 1000)
     ).length;
@@ -49,7 +53,7 @@ const RealtimeATMStatusComponent = ({ bgColor }) => {
     return {
       functional,
       pending,
-      urgent
+      urgent,
     };
   };
 
@@ -70,62 +74,59 @@ const RealtimeATMStatusComponent = ({ bgColor }) => {
       animations: {
         enabled: true,
         dynamicAnimation: {
-          speed: 1000
-        }
+          speed: 500,
+        },
       },
       toolbar: {
-        show: true
-      }
+        show: true,
+      },
     },
     xaxis: {
       type: "datetime",
       categories: chartData.map(
         (data, index) =>
           new Date().getTime() - (chartData.length - index) * 1000
-      )
+      ),
     },
     yaxis: {
-      max: totalATMs
+      max: totalATMs,
     },
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     stroke: {
-      curve: "smooth"
+      curve: "smooth",
     },
     zoom: {
-      enabled: true
+      enabled: true,
     },
-    colors: ["#4caf50", "#e6d200", "#f44336"] // Cores padrão para 100% funcional, pendente e Urgente
+    colors: ["#4caf50", "#e6d200", "#f44336"], // Cores padrão para 100% funcional, pendente e Urgente
   };
 
   const series = [
     {
       name: "100% Funcional",
       data: chartData.map((data) => data.functional),
-      shift: 1 // Adicione o shift para remover dados antigos
+      shift: 1, // Adicione o shift para remover dados antigos
     },
     {
       name: "Pendente",
       data: chartData.map((data) => data.pending),
-      shift: 1
+      shift: 1,
     },
     {
       name: "Urgente",
       data: chartData.map((data) => data.urgent),
-      shift: 1
-    }
+      shift: 1,
+    },
   ];
 
   return (
-    <div className={`realtime-atm-status-component ${bgColor} p-4 rounded-xl shadow-xl mb-4`}>
-      <h2 className="text-2xl font-semibold mb-4">Status em tempo real</h2>
-      <ApexCharts
-        options={options}
-        series={series}
-        type="line"
-        height={330}
-      />
+    <div
+      className={`realtime-atm-status-component ${bgColor} mb-4 rounded-xl p-4 shadow-xl`}
+    >
+      <h2 className="mb-4 text-2xl font-semibold">Status em tempo real</h2>
+      <ApexCharts options={options} series={series} type="line" height={330} />
     </div>
   );
 };

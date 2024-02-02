@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ATMCard from "./ATMCard";
-import ATMList from "./ATMList"; 
+import ATMList from "./ATMList";
 import PaginationButtons from "./PaginationButtons";
 import {
   Tabs,
@@ -33,7 +33,7 @@ export function Atm() {
 
     fetchData();
 
-    const intervalId = setInterval(fetchData, 10000);
+    const intervalId = setInterval(fetchData, 1000);
 
     return () => clearInterval(intervalId);
   }, []);

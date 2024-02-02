@@ -38,11 +38,11 @@ const ATMCard = ({ atm }) => {
     MoneyIcon = "text-red-500";
   }
 
-  if (papel >= 50000) {
+  if (papel >= 1000) {
     paperIcon = "text-green-500";
-  } else if (papel >= 30000 && papel < 50000) {
+  } else if (papel >= 800 && papel < 999) {
     paperIcon = "text-yellow-500";
-  } else if (papel < 30000) {
+  } else if (papel < 800) {
     paperIcon = "text-red-500";
   }
 

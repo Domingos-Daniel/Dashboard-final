@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DefaultLineChart from "../../widgets/Chart/LineCharts/DefaultLineChart";
 import {
   Typography,
@@ -30,17 +30,37 @@ import {
   ordersOverviewData,
 } from "@/data";
 import chartData from "../../data/line-chart-data-01"; // Importe os dados do gráfico
-import Slider from './Slider';
+import Slider from "./Slider";
 
 import DataSyncComponent from "../../DataSyncComponent";
 import PieChart from "@/widgets/charts/PieChart";
 import RealtimeATMStatusComponent from "@/widgets/charts/RealtimeATMStatusComponent";
 export function Home() {
+  const [statsData, setStatsData] = useState(statisticsCardsData);
+
+  // Função para buscar dados e atualizar estatísticas
+  const fetchDataAndUpdateStatistics = () => {
+    // Simulando uma requisição assíncrona (substitua por sua lógica de requisição real)
+    setTimeout(() => {
+      // Atualizar o estado com os mesmos dados originais da fonte
+      setStatsData([...statisticsCardsData]);
+    }, 0); // Simulando uma pequena latência, você pode remover isso na implementação real
+  };
+
+  // Efeito para chamar a função inicialmente e configurar o intervalo de atualização
+  useEffect(() => {
+    fetchDataAndUpdateStatistics(); // Chame a função inicialmente
+    const intervalId = setInterval(fetchDataAndUpdateStatistics, 700); // Configura o intervalo para chamar a função a cada minuto
+
+    // Retorna uma função de limpeza para interromper o intervalo quando o componente for desmontado
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <div className="mt-12">
       <Slider />
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-        {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
+        {statsData.map(({ icon, title, footer, ...rest }) => (
           <StatisticsCard
             key={title}
             {...rest}
@@ -74,10 +94,8 @@ export function Home() {
           />
         ))}
       </div>
-      
 
       <RealtimeATMStatusComponent bgColor="bg-gray-400" />
-
 
       <div className="mb-4 grid hidden grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-2">

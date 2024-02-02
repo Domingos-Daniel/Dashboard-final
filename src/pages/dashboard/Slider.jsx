@@ -58,7 +58,7 @@ const Slider = () => {
         // Filtrar apenas os ATMs com problemas
         const filteredAtms = response.data.filter(
           (atm) =>
-            atm.cash < 30000 || atm.coins < 1000 || atm.systemStatus === "of"
+            atm.cash < 30000 || atm.coins < 800 || atm.systemStatus === "of"
         );
         setAtms(filteredAtms);
       })
@@ -96,6 +96,7 @@ const Slider = () => {
           <div className={`slide ${getProblemDescription(atm)}`} key={index}>
             <p>{atm.name}&nbsp;</p>
             <p> | Problema: {getProblemDescription(atm)}</p>
+            {/* Adicione mais informações conforme necessário */}
           </div>
         ))}
       </div>

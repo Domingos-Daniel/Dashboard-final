@@ -1,7 +1,4 @@
-// Importe a biblioteca axios
 import axios from "axios";
-
-// Importações dos ícones permanecem inalteradas
 import {
   BanknotesIcon,
   UserPlusIcon,
@@ -9,48 +6,39 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 
-const total = "";
-// Função para fazer a requisição Axios e atualizar as estatísticas
-// ... Importações dos ícones permanecem inalteradas ...
-
 // Função para fazer a requisição Axios e atualizar as estatísticas
 function fetchDataAndUpdateStatistics() {
-  // Fazer a requisição Axios
   axios
-    .get("https://my-json-server.typicode.com/Domingos-Daniel/api-teste/atms")
+    .get("https://atms-app.com/wp/wp-json/custom-atm-api/v1/atms")
     .then((response) => {
       const atms = response.data;
 
       // Atualizar as estatísticas com base nos dados da API
-      statisticsCardsData[0].value = atms.length.toString();
-      // Você pode substituir os outros valores aqui com base nos dados da API
-      statisticsCardsData[1].value = atms.filter((atm) => atm.systemStatus === "of").length.toString(); // Substitua conforme necessário
-      // Filtrar os ATMs que atendem às condições
-      const atms100Percent = atms.filter(
+      // Atualizar as estatísticas com base nos dados da API
+      const totalATMs = atms.length;
+      const functional = atms.filter(
         (atm) =>
-          atm.cash > 30000 &&
+          atm.cash >= 30000 &&
           atm.integrity >= 50 &&
-          atm.coins > 1000 &&
+          atm.coins >= 1000 &&
           atm.systemStatus === "on"
-      );
-
-      // Log dos ATMs que atendem às condições para depuração
-      //console.log("ATMs 100% 2:", atms100Percent);
-
-      // Atualizar o valor do cartão de estatísticas correspondente
-      statisticsCardsData[2].value = atms100Percent.length.toString();
-
-      const pendingATMs = atms.filter(
+      ).length;
+      statisticsCardsData[0].value = totalATMs.toString();
+      statisticsCardsData[1].value = atms
+        .filter((atm) => atm.systemStatus === "of")
+        .length.toString();
+      statisticsCardsData[2].value = functional.toString();
+      const pending = atms.filter(
         (atm) =>
-          atm.cash < 30000 ||
-          atm.coins < 1000 ||
-          atm.integrity < 50 ||
+          (atm.cash < 30000 && atm.cash > 1000) ||
+          (atm.coins < 1000 && atm.coins >= 500) ||
+          (atm.integrity < 50 && atm.integrity >= 30) ||
           atm.systemStatus === "of"
-      );
-
-      // Atualizar o valor do cartão de estatísticas correspondente
-      statisticsCardsData[3].value = pendingATMs.length.toString();
-      //statisticsCardsData[3].value = "Novo Valor 3"; // Substitua conforme necessário
+      ).length;
+      statisticsCardsData[3].value = pending.toString();
+      const urgent = totalATMs - functional - pending;
+      statisticsCardsData[1].value = urgent.toString();
+      // Se necessário, você pode usar a variável `urgent` para algum propósito específico
 
       // Chame uma função para atualizar a interface do usuário com os novos valores
       updateUIWithStatistics();
@@ -62,29 +50,40 @@ function fetchDataAndUpdateStatistics() {
 
 // Função para atualizar a interface do usuário com as estatísticas atualizadas
 function updateUIWithStatistics() {
-  // Supondo que você tenha elementos HTML onde deseja exibir as estatísticas
-  // Você pode selecionar esses elementos pelo ID, classe, ou outra maneira
+  // Se estiver no navegador, atualize a interface do usuário
+  if (typeof window !== "undefined") {
+    const totalATMsElement = document.getElementById("totalATMs");
+    const atmsForaDeServicoElement =
+      document.getElementById("atmsForaDeServico");
+    const atms100PercentElement = document.getElementById("atms100Percent");
+    const pendentesElement = document.getElementById("pendentes");
 
-  // Por exemplo, se você tem elementos com IDs correspondentes às estatísticas:
-  const totalATMsElement = document.getElementById("totalATMs");
-  const atmsForaDeServicoElement = document.getElementById("atmsForaDeServico");
-  const atms100PercentElement = document.getElementById("atms100Percent");
-  const pendentesElement = document.getElementById("pendentes");
-
-  // Atualize o conteúdo dos elementos com os novos valores
-  totalATMsElement.textContent = statisticsCardsData[0].value;
-  atmsForaDeServicoElement.textContent = statisticsCardsData[1].value;
-  atms100PercentElement.textContent = statisticsCardsData[2].value;
-  pendentesElement.textContent = statisticsCardsData[3].value;
+    // Verifique se os elementos existem antes de tentar atualizá-los
+    if (totalATMsElement) {
+      totalATMsElement.textContent = statisticsCardsData[0].value;
+    }
+    if (atmsForaDeServicoElement) {
+      atmsForaDeServicoElement.textContent = statisticsCardsData[1].value;
+    }
+    if (atms100PercentElement) {
+      atms100PercentElement.textContent = statisticsCardsData[2].value;
+    }
+    if (pendentesElement) {
+      pendentesElement.textContent = statisticsCardsData[3].value;
+    }
+  }
 }
 
-// Chame a função para buscar dados e atualizar estatísticas
-fetchDataAndUpdateStatistics();
+// Função para buscar dados e atualizar estatísticas
+const fetchData = () => {
+  fetchDataAndUpdateStatistics();
+  // Configurar timeout para chamar a função novamente após 1 minuto
+  setTimeout(fetchData, 1000);
+};
 
-// ... Exporte o objeto `statisticsCardsData` ...
+// Chame a função inicialmente
+fetchData();
 
-
-// Exporte o objeto `statisticsCardsData`
 export const statisticsCardsData = [
   {
     color: "blue",
