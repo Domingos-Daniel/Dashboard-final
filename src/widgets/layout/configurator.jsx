@@ -72,10 +72,10 @@ export function Configurator() {
       <div className="flex items-start justify-between px-6 pt-8 pb-6">
         <div>
           <Typography variant="h5" color="blue-gray">
-            Configuração do Dashboard 
+            Configuração do Dashboard
           </Typography>
           <Typography className="font-normal text-blue-gray-600">
-            Veja as nossas opções para o dashboard 
+            Veja as nossas opções para o dashboard
           </Typography>
         </div>
         <IconButton
@@ -131,6 +131,13 @@ export function Configurator() {
             >
               Branco
             </Button>
+
+            <Button
+              variant={sidenavType === "orange" ? "gradient" : "outlined"}
+              onClick={() => setSidenavType(dispatch, "orange")}
+            >
+              Branco
+            </Button>
           </div>
         </div>
         <div className="mb-12">
@@ -155,7 +162,8 @@ export function Configurator() {
                 Baixar
               </Button>
             </a>
-            <a className="hidden"
+            <a
+              className="hidden"
               href="https://www.material-tailwind.com/docs/react/installation?rel=mtdr"
               target="_black"
             >
@@ -163,7 +171,8 @@ export function Configurator() {
                 Ver Documentação
               </Button>
             </a>
-            <a className="hidden"
+            <a
+              className="hidden"
               href="https://www.material-tailwind.com/blocks/react?rel=mtdr"
               target="_black"
             >
@@ -173,7 +182,7 @@ export function Configurator() {
             </a>
           </div>
           <a
-            className="mx-auto flex items-center justify-center gap-2 hidden"
+            className="mx-auto flex hidden items-center justify-center gap-2"
             href="https://github.com/creativetimofficial/material-tailwind-dashboard-react"
             target="_blank"
             rel="noreferrer"
@@ -206,7 +215,7 @@ export function Configurator() {
             </svg>
           </a>
         </div>
-        <div className="text-center hidden">
+        <div className="hidden text-center">
           <Typography variant="h6" color="blue-gray">
             Thank you for sharing ❤️
           </Typography>
