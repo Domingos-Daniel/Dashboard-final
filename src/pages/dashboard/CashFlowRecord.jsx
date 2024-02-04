@@ -8,7 +8,7 @@ const CashFlowRecord = ({ atm }) => {
 
     // Título
     doc.setFontSize(18);
-    doc.text("Relatório de Fluxo de Caixa", 20, 15);
+    doc.text(`Relatório de Fluxo de Caixa: ${rechargeDates}`, 20, 15);
 
     // Informações
     doc.setFontSize(12);
@@ -120,8 +120,13 @@ const CashFlowRecord = ({ atm }) => {
   return (
     <div className="overflow-y: auto h-4/6 w-4/6 rounded-lg bg-white p-4">
       <h2 className="mb-4 text-2xl font-bold">Registro de Fluxo de Caixa</h2>
-      <button onClick={generatePDF}>Gerar Relatório em PDF</button>
 
+      <button
+        onClick={generatePDF}
+        className="ml-auto rounded bg-orange-500 py-2 px-4 font-bold text-white hover:bg-orange-700"
+      >
+        Gerar Relatório em PDF
+      </button>
       <p className="mb-2">
         <strong>Datas de Recarga:</strong> {rechargeDates.join(", ")}
       </p>
@@ -169,7 +174,6 @@ const CashFlowRecord = ({ atm }) => {
           height={320}
         />
       </div>
-
       <p className="mb-4">
         <strong>Sugestão:</strong> {suggestion}
       </p>

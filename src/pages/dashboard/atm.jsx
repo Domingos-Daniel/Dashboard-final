@@ -11,6 +11,7 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import { apiUrl } from "../../apiConfig";
+import jsPDF from "jspdf";
 
 export function Atm() {
   const [atms, setATMs] = useState([]);
@@ -20,6 +21,98 @@ export function Atm() {
   const [filterColor, setFilterColor] = useState("all");
   const [processedATMIds, setProcessedATMIds] = useState([]);
   const [smsSentTimestamps, setSmsSentTimestamps] = useState({});
+
+  const generateAllATMsPDF = () => {
+    const doc = new jsPDF();
+
+    // Título
+    doc.setFontSize(18);
+    doc.text("Relatório de Todos os ATMs", 20, 15);
+
+    let yPos = 30;
+
+    // Informações de cada ATM
+    let attentionATMs = [];
+    let mostRequestedService = { name: "", count: 0 };
+    let mostErrorProneATM = { id: 0, errorCount: 0 };
+
+    atms.forEach((atm, index) => {
+      const lineSpacing = 10;
+      const blockHeight = 50;
+
+      const checkPageHeight = () => {
+        if (yPos + blockHeight + lineSpacing > doc.internal.pageSize.height) {
+          doc.addPage();
+          yPos = 30;
+        }
+      };
+
+      checkPageHeight();
+
+      doc.setFontSize(12);
+      doc.text(`ATM ID: ${atm.id}`, 20, yPos);
+      doc.text(`Gerente: ${atm.managerName}`, 20, yPos + lineSpacing);
+      doc.text(`Dinheiro: ${atm.cash} Kwanzas`, 20, yPos + 2 * lineSpacing);
+      doc.text(`Integridade: ${atm.integrity}%`, 20, yPos + 3 * lineSpacing);
+      doc.text(`Papel: ${atm.coins} unidades`, 20, yPos + 4 * lineSpacing);
+
+      doc.line(20, yPos + 5 * lineSpacing, 190, yPos + 5 * lineSpacing);
+
+      // Atualiza as informações de resumo
+      if (atm.cash < 30000 || atm.integrity < 50 || atm.coins < 1000) {
+        attentionATMs.push(atm.id);
+      }
+
+      if (atm.serviceRequestCount > mostRequestedService.count) {
+        mostRequestedService.name = atm.mostRequestedService;
+        mostRequestedService.count = atm.serviceRequestCount;
+      }
+
+      if (atm.errorCount > mostErrorProneATM.errorCount) {
+        mostErrorProneATM.id = atm.id;
+        mostErrorProneATM.errorCount = atm.errorCount;
+      }
+
+      yPos += blockHeight + lineSpacing;
+    });
+
+    // Adiciona informações de resumo
+    yPos += 20; // Espaçamento antes do resumo
+    doc.setFontSize(14);
+    doc.text("Resumo:", 20, yPos);
+
+    yPos += 15; // Espaçamento antes dos detalhes do resumo
+    doc.setFontSize(12);
+
+    if (attentionATMs.length > 0) {
+      doc.text(
+        `ATMs que requerem atenção especial: ${attentionATMs.join(", ")}`,
+        20,
+        yPos
+      );
+      yPos += 15;
+    } else {
+      doc.text("Todos os ATMs estão operando normalmente.", 20, yPos);
+      yPos += 15;
+    }
+
+    doc.text(
+      `Serviço mais solicitado: ${mostRequestedService.name} (Total: ${mostRequestedService.count} solicitações)`,
+      20,
+      yPos
+    );
+    yPos += 15;
+
+    doc.text(
+      `ATM com mais erros: ATM ID ${mostErrorProneATM.id} (Total de erros: ${mostErrorProneATM.errorCount})`,
+      20,
+      yPos
+    );
+    yPos += 15;
+
+    // Salva o PDF
+    doc.save("relatorio_todos_atms.pdf");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -182,6 +275,13 @@ export function Atm() {
                   <option value="red">Urgente</option>
                 </select>
               </div>
+
+              <button
+                onClick={generateAllATMsPDF}
+                className="ml-4 mt-4 rounded bg-green-500 py-2 px-4 font-bold text-white hover:bg-green-700"
+              >
+                Gerar Relatório de Todos os ATMs
+              </button>
             </div>
             <div className="App mt-5 flex items-center justify-center">
               <div className="flex flex-wrap gap-6 sm:gap-4 md:gap-6 lg:gap-8">

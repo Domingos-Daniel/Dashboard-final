@@ -74,7 +74,7 @@ const RealtimeATMStatusComponent = ({ bgColor }) => {
       animations: {
         enabled: true,
         dynamicAnimation: {
-          speed: 500,
+          speed: 100,
         },
       },
       toolbar: {

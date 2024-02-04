@@ -32,8 +32,7 @@ function fetchDataAndUpdateStatistics() {
         (atm) =>
           (atm.cash < 30000 && atm.cash > 1000) ||
           (atm.coins < 1000 && atm.coins >= 500) ||
-          (atm.integrity < 50 && atm.integrity >= 30) ||
-          atm.systemStatus === "of"
+          (atm.integrity < 50 && atm.integrity >= 30)
       ).length;
       statisticsCardsData[3].value = pending.toString();
       const urgent = totalATMs - functional - pending;
