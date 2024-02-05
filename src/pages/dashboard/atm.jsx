@@ -12,6 +12,8 @@ import {
 } from "@material-tailwind/react";
 import { apiUrl } from "../../apiConfig";
 import jsPDF from "jspdf";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export function Atm() {
   const [atms, setATMs] = useState([]);
