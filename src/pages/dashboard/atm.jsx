@@ -21,6 +21,7 @@ export function Atm() {
   const [filterColor, setFilterColor] = useState("all");
   const [processedATMIds, setProcessedATMIds] = useState([]);
   const [smsSentTimestamps, setSmsSentTimestamps] = useState({});
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const generateAllATMsPDF = () => {
     const doc = new jsPDF();
@@ -36,7 +37,12 @@ export function Atm() {
     let mostRequestedService = { name: "", count: 0 };
     let mostErrorProneATM = { id: 0, errorCount: 0 };
 
-    atms.forEach((atm, index) => {
+    const filteredATMs = atms.filter((atm) => {
+      const atmDate = new Date(atm.timestamp);
+      return atmDate >= selectedDate;
+    });
+
+    filteredATMs.forEach((atm, index) => {
       const lineSpacing = 10;
       const blockHeight = 50;
 
