@@ -26,7 +26,7 @@ export function Atm() {
   const [startDate, setStartDate] = useState(new Date());
   const [filterValue, setFilterValue] = useState("all");
 
-  const generateAllATMsPDF = () => {
+  const generateAllATMsPDF = (filter) => {
     const doc = new jsPDF();
 
     const buttonText =
@@ -58,7 +58,7 @@ export function Atm() {
       filteredATMs = filterATMsByColor(atms, filter);
     }
 
-    atms.forEach((atm, index) => {
+    filteredATMs.forEach((atm, index) => {
       const lineSpacing = 10;
       const blockHeight = 70; // Aumentei a altura do bloco para acomodar as novas informações
 
@@ -172,7 +172,7 @@ export function Atm() {
       .getMinutes()
       .toString()
       .padStart(2, "0")}`;
-    const filename = `relatorio-todos-atms-${formattedDate}-${formattedTime}.pdf`;
+    const filename = `relatorio-${filter}-atms-${formattedDate}-${formattedTime}.pdf`;
     doc.setFontSize(10);
     doc.text(
       `Processado por atms-manager em: ${formattedDate} às ${formattedTime}`,
