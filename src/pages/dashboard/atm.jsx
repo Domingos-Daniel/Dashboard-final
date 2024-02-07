@@ -28,9 +28,11 @@ export function Atm() {
   const generateAllATMsPDF = () => {
     const doc = new jsPDF();
 
-    // Título
+    // Título e imagem
+    const imgData = "data:image/png;base64,IMAGE_BASE64"; // Substitua IMAGE_BASE64 pela base64 da sua imagem
+    doc.addImage(imgData, "PNG", 15, 10, 30, 30);
     doc.setFontSize(18);
-    doc.text("Relatório de Todos os ATMs", 20, 15);
+    doc.text("Relatório de Todos os ATMs", 50, 25);
 
     let yPos = 30;
 
@@ -39,12 +41,7 @@ export function Atm() {
     let mostRequestedService = { name: "", count: 0 };
     let mostErrorProneATM = { id: 0, errorCount: 0 };
 
-    const filteredATMs = atms.filter((atm) => {
-      const atmDate = new Date(atm.timestamp);
-      return atmDate >= startDate;
-    });
-
-    filteredATMs.forEach((atm, index) => {
+    atms.forEach((atm, index) => {
       const lineSpacing = 10;
       const blockHeight = 50;
 
