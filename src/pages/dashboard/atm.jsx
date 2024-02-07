@@ -23,7 +23,7 @@ export function Atm() {
   const [filterColor, setFilterColor] = useState("all");
   const [processedATMIds, setProcessedATMIds] = useState([]);
   const [smsSentTimestamps, setSmsSentTimestamps] = useState({});
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
 
   const generateAllATMsPDF = () => {
     const doc = new jsPDF();
@@ -41,7 +41,7 @@ export function Atm() {
 
     const filteredATMs = atms.filter((atm) => {
       const atmDate = new Date(atm.timestamp);
-      return atmDate >= selectedDate;
+      return atmDate >= startDate;
     });
 
     filteredATMs.forEach((atm, index) => {
@@ -290,6 +290,11 @@ export function Atm() {
               >
                 Gerar Relatório de Todos os ATMs
               </button>
+
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+              />
             </div>
             <div className="App mt-5 flex items-center justify-center">
               <div className="flex flex-wrap gap-6 sm:gap-4 md:gap-6 lg:gap-8">
