@@ -24,9 +24,15 @@ export function Atm() {
   const [processedATMIds, setProcessedATMIds] = useState([]);
   const [smsSentTimestamps, setSmsSentTimestamps] = useState({});
   const [startDate, setStartDate] = useState(new Date());
+  const [filterValue, setFilterValue] = useState("all");
 
   const generateAllATMsPDF = () => {
     const doc = new jsPDF();
+
+    const buttonText =
+      filter === "all"
+        ? "Gerar Relatório de Todos os ATMs"
+        : `Gerar Relatório de ${filter.toUpperCase()} ATMs`;
 
     // Adiciona imagem
     const imgData = `data:image/png;base64,` + logo; // Substitua logo pela base64 da sua imagem
@@ -43,6 +49,14 @@ export function Atm() {
     let attentionATMs = [];
     let mostRequestedService = { name: "", count: 0 };
     let mostErrorProneATM = { id: 0, errorCount: 0 };
+    let filteredATMs;
+
+    if (filter === "all") {
+      filteredATMs = atms;
+    } else {
+      // Utiliza a função filterATMsByColor para aplicar o filtro
+      filteredATMs = filterATMsByColor(atms, filter);
+    }
 
     atms.forEach((atm, index) => {
       const lineSpacing = 10;
@@ -323,7 +337,10 @@ export function Atm() {
               <div className="relative inline-flex">
                 <select
                   className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-2 leading-tight shadow hover:border-gray-400 focus:outline-none"
-                  onChange={(e) => handleFilterChange(e.target.value)}
+                  onChange={(e) => {
+                    handleFilterChange(e.target.value);
+                    setFilterValue(e.target.value);
+                  }}
                 >
                   <option value="all">Todos ⇕</option>
                   <option value="green">100%</option>
@@ -333,10 +350,12 @@ export function Atm() {
               </div>
 
               <button
-                onClick={generateAllATMsPDF}
-                className="ml-4 mt-4 rounded bg-green-500 py-2 px-4 font-bold text-white hover:bg-green-700"
+                className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+                onClick={() => generateAllATMsPDF(filterValue)}
               >
-                Gerar Relatório de Todos os ATMs
+                {filterValue === "all"
+                  ? "Gerar Relatório de Todos os ATMs"
+                  : `Gerar Relatório de ${filterValue.toUpperCase()} ATMs`}
               </button>
 
               <DatePicker
