@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import jsPDF from "jspdf";
+import * as htmlToImage from "html-to-image";
 
 const CashFlowRecord = ({ atm }) => {
-  const generatePDF = () => {
-    const doc = new jsPDF();
+  const generatePDF = async () => {
+    const doc = new jsPDF("p", "px");
 
     // Título
     doc.setFontSize(18);
@@ -18,9 +19,9 @@ const CashFlowRecord = ({ atm }) => {
     doc.text(`Média de Levantamento: ${averageWithdrawalAmount}`, 20, 60);
 
     // Gráfico
-    const chartImgData = serviceData.series.map((data, index) => {
-      const chartCanvas = document.createElement("canvas");
-      const ctx = chartCanvas.getContext("2d");
+    const addChartToPdf = async (data, index) => {
+      const chartCanvas = document.createElement("div");
+      chartCanvas.className = "custom-chart";
       const chartOptions = {
         type: "line",
         data: {
@@ -28,12 +29,21 @@ const CashFlowRecord = ({ atm }) => {
           datasets: [{ label: data.name, data: data.data }],
         },
       };
-      new Chart(ctx, chartOptions);
+      // Create a chart inside the div
+      new Chart(chartCanvas, chartOptions);
 
-      const imageData = chartCanvas.toDataURL("image/png");
-      doc.addImage(imageData, "PNG", 20, 70 + index * 50, 160, 80);
-      return imageData;
-    });
+      // Convert the chart div to an image
+      const imageDataUrl = await htmlToImage.toPng(chartCanvas);
+
+      // Add the image to the PDF
+      doc.addImage(imageDataUrl, "PNG", 20, 70 + index * 50, 160, 80);
+
+      return imageDataUrl;
+    };
+
+    const chartImgData = await Promise.all(
+      serviceData.series.map((data, index) => addChartToPdf(data, index))
+    );
 
     // Sugestão
     doc.text(`Sugestão: ${suggestion}`, 20, 70 + chartImgData.length * 50 + 10);
@@ -118,7 +128,7 @@ const CashFlowRecord = ({ atm }) => {
   }
 
   return (
-    <div className="overflow-y: auto h-4/6 w-4/6 rounded-lg bg-white p-4">
+    <div className="h-full w-full overflow-y-auto p-4">
       <h2 className="mb-4 text-2xl font-bold">Registro de Fluxo de Caixa</h2>
 
       <button
@@ -139,7 +149,7 @@ const CashFlowRecord = ({ atm }) => {
       <p className="mb-4">
         <strong>Média de Levantamento:</strong> {averageWithdrawalAmount}
       </p>
-      <div className="mb-4 rounded-lg bg-white p-4">
+      <div className="mb-4 rounded-lg bg-white p-4" id="chart-container">
         <Chart
           options={{
             chart: {

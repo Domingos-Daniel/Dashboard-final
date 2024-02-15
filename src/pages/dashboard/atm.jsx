@@ -26,13 +26,20 @@ export function Atm() {
   const [startDate, setStartDate] = useState(new Date());
   const [filterValue, setFilterValue] = useState("all");
 
+  const filterLabels = {
+    all: "Todos",
+    green: "Funcional",
+    yellow: "Pendente",
+    red: "Urgente",
+  };
+
   const generateAllATMsPDF = (filter) => {
     const doc = new jsPDF();
 
     const buttonText =
       filter === "all"
         ? "Gerar Relatório de Todos os ATMs"
-        : `Gerar Relatório de ${filter.toUpperCase()} ATMs`;
+        : `Gerar Relatório de ${filterLabels[filterColor]} ATMs`;
 
     // Adiciona imagem
     const imgData = `data:image/png;base64,` + logo; // Substitua logo pela base64 da sua imagem
@@ -41,7 +48,7 @@ export function Atm() {
     // Título
     doc.setFont("Poppins", "bold");
     doc.setFontSize(18);
-    doc.text("Relatório de Todos os ATMs", 20, 25);
+    doc.text(`Relatório de ${filterLabels[filterColor]} ATMs`, 20, 25);
 
     let yPos = 45;
 
@@ -60,7 +67,7 @@ export function Atm() {
 
     filteredATMs.forEach((atm, index) => {
       const lineSpacing = 10;
-      const blockHeight = 70; // Aumentei a altura do bloco para acomodar as novas informações
+      const blockHeight = 90; // Ajustei a altura do bloco
 
       const checkPageHeight = () => {
         if (yPos + blockHeight + lineSpacing > doc.internal.pageSize.height) {
@@ -76,16 +83,16 @@ export function Atm() {
       doc.setFontSize(14);
       doc.text(`Nome do ATM: ${atm.name}`, 20, yPos);
       yPos += lineSpacing;
-      // Aumente yPos antes de desenhar a linha
 
       // Demais informações
       doc.setFont("Poppins", "normal");
       doc.text(`Gerente: ${atm.managerName}`, 20, yPos);
       doc.text(`Localização: ${atm.location}`, 20, yPos + lineSpacing);
 
-      // Cores para Cash, Papel e SystemStatus
+      // Cores para Cash, Papel, Integrity e SystemStatus
       const cashColor = atm.cash >= 30000 ? [0, 128, 0] : [255, 0, 0];
       const coinsColor = atm.coins >= 1000 ? [0, 128, 0] : [255, 0, 0];
+      const integrityColor = atm.integrity >= 50 ? [0, 128, 0] : [255, 0, 0];
       const systemStatusColor =
         atm.systemStatus === "on" ? [0, 128, 0] : [255, 0, 0];
 
@@ -94,17 +101,23 @@ export function Atm() {
       doc.text(`Dinheiro: ${atm.cash} Kwanzas`, 20, yPos + 3 * lineSpacing);
       doc.setTextColor(0, 0, 0); // Retorna à cor preta
 
+      doc.setTextColor(...integrityColor);
       doc.text(`Integridade: ${atm.integrity}%`, 20, yPos + 4 * lineSpacing);
+      doc.setTextColor(0, 0, 0); // Retorna à cor preta
 
       doc.setTextColor(...coinsColor);
       doc.text(`Papel: ${atm.coins} unidades`, 20, yPos + 5 * lineSpacing);
       doc.setTextColor(0, 0, 0); // Retorna à cor preta
 
       doc.setTextColor(...systemStatusColor);
-      doc.text(`Status: ${atm.systemStatus}`, 20, yPos + 2 * lineSpacing);
+      doc.text(
+        `Status de Sistema: ${atm.systemStatus}`,
+        20,
+        yPos + 6 * lineSpacing
+      );
       doc.setTextColor(0, 0, 0); // Retorna à cor preta
 
-      doc.line(20, yPos + 6 * lineSpacing, 190, yPos + 6 * lineSpacing);
+      doc.line(20, yPos + 7 * lineSpacing, 190, yPos + 7 * lineSpacing);
 
       // Atualiza as informações de resumo
       if (atm.cash < 30000 || atm.integrity < 50 || atm.coins < 1000) {
@@ -121,14 +134,14 @@ export function Atm() {
         mostErrorProneATM.errorCount = atm.errorCount;
       }
 
-      yPos += 6 * lineSpacing;
+      yPos += 7 * lineSpacing;
     });
 
     // Adiciona informações de resumo
     yPos += 10; // Espaçamento antes do resumo
     doc.setFont("Poppins", "bold");
     doc.setFontSize(14);
-    doc.text("Resumo:", 20, yPos);
+    doc.text(`Resumo de ${filterLabels[filterColor]} ATMs:`, 20, yPos);
 
     yPos += 15; // Espaçamento antes dos detalhes do resumo
     doc.setFont("Poppins", "normal");
@@ -172,7 +185,7 @@ export function Atm() {
       .getMinutes()
       .toString()
       .padStart(2, "0")}`;
-    const filename = `relatorio-${filter}-atms-${formattedDate}-${formattedTime}.pdf`;
+    const filename = `relatorio-${filterLabels[filterColor]}-atms-${formattedDate}-${formattedTime}.pdf`;
     doc.setFontSize(10);
     doc.text(
       `Processado por atms-manager em: ${formattedDate} às ${formattedTime}`,
@@ -209,7 +222,7 @@ export function Atm() {
       return atms;
     } else if (color === "green") {
       return atms.filter(
-        (atm) => atm.cash > 30000 && atm.integrity >= 50 && atm.coins > 1000
+        (atm) => atm.cash >= 30000 && atm.integrity >= 50 && atm.coins > 1000
       );
     } else if (color === "yellow") {
       return atms.filter(
@@ -222,12 +235,7 @@ export function Atm() {
       return atms.filter(
         (atm) =>
           !(atm.cash > 30000 && atm.integrity >= 50 && atm.coins > 1000) &&
-          !(
-            atm.cash > 10000 &&
-            atm.cash <= 30000 &&
-            atm.integrity < 50 &&
-            atm.integrity >= 30
-          )
+          !(atm.cash < 30000 && atm.integrity < 50 && atm.coins < 500)
       );
     }
   };
@@ -351,11 +359,9 @@ export function Atm() {
 
               <button
                 className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-                onClick={() => generateAllATMsPDF(filterValue)}
+                onClick={() => generateAllATMsPDF(filterColor)}
               >
-                {filterValue === "all"
-                  ? "Gerar Relatório de Todos os ATMs"
-                  : `Gerar Relatório de ${filterValue.toUpperCase()} ATMs`}
+                {`Gerar Relatório de ${filterLabels[filterColor]} ATMs`}
               </button>
 
               <DatePicker

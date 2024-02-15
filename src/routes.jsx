@@ -41,6 +41,13 @@ export const routes = [
 
       {
         icon: <ChartBarIcon {...icon} />,
+        name: "Relatórios",
+        path: "/relatorio",
+        element: <ATMCharts />,
+      },
+
+      {
+        icon: <ChartBarIcon {...icon} />,
         name: "Gráficos & Analytics",
         path: "/analytcs",
         element: <ATMCharts />,
@@ -85,8 +92,8 @@ export const routes = [
         element: <SignIn />,
       },
       {
-        icon: <UserPlusIcon {...icon} />,
-        name: "Adicionar Gestor",
+        icon: "",
+        name: "",
         path: "/sign-up",
         element: <SignUp />,
       },
