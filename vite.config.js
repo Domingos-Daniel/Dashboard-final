@@ -6,9 +6,4 @@ export default defineConfig({
   resolve: {
     alias: [{ find: "@", replacement: "/src" }],
   },
-  build: {
-    rollupOptions: {
-      external: ['react-slick', 'slick-carousel/slick/slick.css'],
-    },
-  },
 });
