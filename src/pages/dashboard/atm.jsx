@@ -25,6 +25,7 @@ export function Atm() {
   const [smsSentTimestamps, setSmsSentTimestamps] = useState({});
   const [startDate, setStartDate] = useState(new Date());
   const [filterValue, setFilterValue] = useState("all");
+  const [formatoRelatorio, setFormatoRelatorio] = useState("pdf");
 
   const filterLabels = {
     all: "Todos",
@@ -32,149 +33,127 @@ export function Atm() {
     yellow: "Pendente",
     red: "Urgente",
   };
+  const handleGerarRelatorio = () => {
+    if (!filterColor) {
+      console.error("Selecione uma cor antes de gerar o relatório.");
+      return;
+    }
+
+    if (formatoRelatorio === "pdf") {
+      generateAllATMsPDF(filterColor);
+    } else if (formatoRelatorio === "csv") {
+      generateAllATMsCSV(filterColor);
+    } else if (formatoRelatorio === "txt") {
+      generateAllATMsTXT(filterColor);
+    } else {
+      console.error("Formato de relatório não suportado:", formatoRelatorio);
+    }
+  };
 
   const generateAllATMsPDF = (filter) => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({ orientation: "landscape" });
 
     const buttonText =
       filter === "all"
         ? "Gerar Relatório de Todos os ATMs"
         : `Gerar Relatório de ${filterLabels[filterColor]} ATMs`;
 
-    // Adiciona imagem
-    const imgData = `data:image/png;base64,` + logo; // Substitua logo pela base64 da sua imagem
+    const imgData = `data:image/png;base64,` + logo;
     doc.addImage(imgData, "PNG", doc.internal.pageSize.width - 45, 10, 30, 30);
 
-    // Título
     doc.setFont("Poppins", "bold");
     doc.setFontSize(18);
-    doc.text(`Relatório de ${filterLabels[filterColor]} ATMs`, 20, 25);
+    doc.text(
+      `Relatório de ${filterLabels[filterColor]} ATMs`,
+      doc.internal.pageSize.width / 2,
+      25,
+      { align: "center" }
+    );
 
     let yPos = 45;
 
-    // Informações de cada ATM
-    let attentionATMs = [];
-    let mostRequestedService = { name: "", count: 0 };
-    let mostErrorProneATM = { id: 0, errorCount: 0 };
+    const tableHeaders = [
+      "ATM",
+      "Gerente",
+      "Localização",
+      "Dinheiro (Kwanzas)",
+      "Integridade (%)",
+      "Papel (unidades)",
+      "Status",
+    ];
+
+    const headerSpacing = 10;
+    const cellWidth = 40;
+    const tableWidth = tableHeaders.length * cellWidth;
+
+    const checkPageHeight = () => {
+      if (yPos + headerSpacing > doc.internal.pageSize.height - 10) {
+        doc.addPage();
+        yPos = 10; // Redefine a posição y para o início da página
+      }
+    };
+
+    const calculateHorizontalOffset = () => {
+      return (doc.internal.pageSize.width - tableWidth) / 2;
+    };
+
+    // Adiciona cabeçalhos da tabela
+    doc.setFillColor(200, 220, 255); // Cor de fundo para cabeçalhos
+    doc.setFont("Poppins", "bold");
+    doc.setFontSize(12);
+
+    tableHeaders.forEach((header, index) => {
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.2);
+      doc.setFillColor(200, 220, 255);
+      const xPosition = calculateHorizontalOffset() + index * cellWidth;
+      doc.rect(xPosition, yPos, cellWidth, headerSpacing, "F");
+      doc.setTextColor(0);
+      doc.text(header, xPosition + 5, yPos + headerSpacing / 2, {
+        align: "center",
+      });
+    });
+
+    yPos += headerSpacing;
+
     let filteredATMs;
 
     if (filter === "all") {
       filteredATMs = atms;
     } else {
-      // Utiliza a função filterATMsByColor para aplicar o filtro
       filteredATMs = filterATMsByColor(atms, filter);
     }
 
     filteredATMs.forEach((atm, index) => {
       const lineSpacing = 10;
-      const blockHeight = 90; // Ajustei a altura do bloco
-
-      const checkPageHeight = () => {
-        if (yPos + blockHeight + lineSpacing > doc.internal.pageSize.height) {
-          doc.addPage();
-          yPos = 30;
-        }
-      };
+      const cellSpacing = 5;
 
       checkPageHeight();
 
-      // Nome do ATM negritado
-      doc.setFont("Poppins", "bold");
-      doc.setFontSize(14);
-      doc.text(`Nome do ATM: ${atm.name}`, 20, yPos);
-      yPos += lineSpacing;
-
-      // Demais informações
       doc.setFont("Poppins", "normal");
-      doc.text(`Gerente: ${atm.managerName}`, 20, yPos);
-      doc.text(`Localização: ${atm.location}`, 20, yPos + lineSpacing);
 
-      // Cores para Cash, Papel, Integrity e SystemStatus
-      const cashColor = atm.cash >= 30000 ? [0, 128, 0] : [255, 0, 0];
-      const coinsColor = atm.coins >= 1000 ? [0, 128, 0] : [255, 0, 0];
-      const integrityColor = atm.integrity >= 50 ? [0, 128, 0] : [255, 0, 0];
-      const systemStatusColor =
-        atm.systemStatus === "on" ? [0, 128, 0] : [255, 0, 0];
+      const dataRow = [
+        atm.name,
+        atm.managerName,
+        atm.location,
+        `${atm.cash} Kwanzas`,
+        `${atm.integrity}%`,
+        `${atm.coins} unidades`,
+        atm.systemStatus,
+      ];
 
-      // Adiciona informações coloridas
-      doc.setTextColor(...cashColor);
-      doc.text(`Dinheiro: ${atm.cash} Kwanzas`, 20, yPos + 3 * lineSpacing);
-      doc.setTextColor(0, 0, 0); // Retorna à cor preta
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.2);
 
-      doc.setTextColor(...integrityColor);
-      doc.text(`Integridade: ${atm.integrity}%`, 20, yPos + 4 * lineSpacing);
-      doc.setTextColor(0, 0, 0); // Retorna à cor preta
+      // Adiciona dados da tabela
+      dataRow.forEach((data, dataIndex) => {
+        const xPosition = calculateHorizontalOffset() + dataIndex * cellWidth;
+        doc.rect(xPosition, yPos, cellWidth, lineSpacing, "D");
+        doc.text(data, xPosition + 5, yPos + cellSpacing);
+      });
 
-      doc.setTextColor(...coinsColor);
-      doc.text(`Papel: ${atm.coins} unidades`, 20, yPos + 5 * lineSpacing);
-      doc.setTextColor(0, 0, 0); // Retorna à cor preta
-
-      doc.setTextColor(...systemStatusColor);
-      doc.text(
-        `Status de Sistema: ${atm.systemStatus}`,
-        20,
-        yPos + 6 * lineSpacing
-      );
-      doc.setTextColor(0, 0, 0); // Retorna à cor preta
-
-      doc.line(20, yPos + 7 * lineSpacing, 190, yPos + 7 * lineSpacing);
-
-      // Atualiza as informações de resumo
-      if (atm.cash < 30000 || atm.integrity < 50 || atm.coins < 1000) {
-        attentionATMs.push(atm.id);
-      }
-
-      if (atm.serviceRequestCount > mostRequestedService.count) {
-        mostRequestedService.name = atm.mostRequestedService;
-        mostRequestedService.count = atm.serviceRequestCount;
-      }
-
-      if (atm.errorCount > mostErrorProneATM.errorCount) {
-        mostErrorProneATM.id = atm.id;
-        mostErrorProneATM.errorCount = atm.errorCount;
-      }
-
-      yPos += 7 * lineSpacing;
+      yPos += lineSpacing;
     });
-
-    // Adiciona informações de resumo
-    yPos += 10; // Espaçamento antes do resumo
-    doc.setFont("Poppins", "bold");
-    doc.setFontSize(14);
-    doc.text(`Resumo de ${filterLabels[filterColor]} ATMs:`, 20, yPos);
-
-    yPos += 15; // Espaçamento antes dos detalhes do resumo
-    doc.setFont("Poppins", "normal");
-    doc.setFontSize(12);
-
-    if (attentionATMs.length > 0) {
-      doc.setTextColor(255, 0, 0); // Vermelho para ATMs que requerem atenção
-      doc.text(
-        `ATMs que requerem atenção especial: ${attentionATMs.join(", ")}`,
-        20,
-        yPos
-      );
-      yPos += 15;
-    } else {
-      doc.setTextColor(0, 128, 0); // Verde para todos os ATMs operando normalmente
-      doc.text("Todos os ATMs estão operando normalmente.", 20, yPos);
-      yPos += 15;
-    }
-
-    doc.setTextColor(0, 0, 0); // Retorna à cor preta
-    doc.text(
-      `Serviço mais solicitado: ${mostRequestedService.name} (Total: ${mostRequestedService.count} solicitações)`,
-      20,
-      yPos
-    );
-    yPos += 15;
-
-    doc.text(
-      `ATM com mais erros: ATM ID ${mostErrorProneATM.id} (Total de erros: ${mostErrorProneATM.errorCount})`,
-      20,
-      yPos
-    );
-    yPos += 15;
 
     // Adiciona rodapé com data e hora
     const date = new Date();
@@ -193,7 +172,6 @@ export function Atm() {
       doc.internal.pageSize.height - 10
     );
 
-    // Salva o PDF com o nome do arquivo formatado
     doc.save(filename);
   };
 
@@ -342,7 +320,7 @@ export function Atm() {
         <TabsBody>
           <TabPanel key="card" value="card">
             <div className="filter-select">
-              <div className="relative inline-flex">
+              <div className="relative mx-2 inline-flex">
                 <select
                   className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-2 leading-tight shadow hover:border-gray-400 focus:outline-none"
                   onChange={(e) => {
@@ -363,6 +341,18 @@ export function Atm() {
               >
                 {`Gerar Relatório de ${filterLabels[filterColor]} ATMs`}
               </button>
+
+              <div className="relative mx-2 inline-flex">
+                <select
+                  className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-2 leading-tight shadow hover:border-gray-400 focus:outline-none"
+                  value={formatoRelatorio}
+                  onChange={(e) => setFormatoRelatorio(e.target.value)}
+                >
+                  <option value="pdf">PDF ⇕</option>
+                  <option value="csv">CSV</option>
+                  <option value="txt">TXT</option>
+                </select>
+              </div>
 
               <DatePicker
                 selected={startDate}

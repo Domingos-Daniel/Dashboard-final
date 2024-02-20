@@ -1,90 +1,54 @@
 import React, { useState, useEffect } from "react";
-import {
-  MagnifyingGlassCircleIcon
-} from "@heroicons/react/24/solid";
-import {
-  getFirestore,
-  collection,
-  where,
-  query,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
-import firebaseApp from "@/firebaseConfig";
 import ATMCard from "./ATMCard"; // Certifique-se de fornecer o caminho correto para o seu componente ATMCard
-
-const db = getFirestore(firebaseApp);
 
 const SearchATM = () => {
   const [searchType, setSearchType] = useState("id");
   const [searchTerm, setSearchTerm] = useState("");
+  const [allATMs, setAllATMs] = useState([]);
   const [searchResult, setSearchResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSearch = async () => {
+  const fetchData = async () => {
     try {
-      let queryRef;
-
-      if (searchType === "id") {
-        const q = query(
-          collection(db, "registrosDiario"),
-          where("atmData.id", "==", parseInt(searchTerm, 10))
-        );
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          setSearchResult(querySnapshot.docs.map((doc) => doc.data()));
-        } else {
-          setSearchResult([]);
-        }
-        return;
-      } else if (searchType === "name") {
-        const q = query(
-          collection(db, "registrosDiario"),
-          where("atmData.name", ">=", searchTerm),
-          where("atmData.name", "<=", searchTerm + "\uf8ff")
-        );
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          setSearchResult(querySnapshot.docs.map((doc) => doc.data()));
-        } else {
-          setSearchResult([]);
-        }
-        return;
-      } else if (searchType === "location") {
-        const q = query(
-          collection(db, "registrosDiario"),
-          where("atmData.location", ">=", searchTerm),
-          where("atmData.location", "<=", searchTerm + "\uf8ff")
-        );
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          setSearchResult(querySnapshot.docs.map((doc) => doc.data()));
-        } else {
-          setSearchResult([]);
-        }
-        return;
-      }
-
-      console.log("Entrou aqui");
-
-      const docRef = doc(db, "registrosDiario", searchTerm);
-      const docSnapshot = await getDoc(docRef);
-
-      if (docSnapshot.exists()) {
-        setSearchResult([docSnapshot.data()]);
-      } else {
-        setSearchResult([]);
-        console.log("Registro não encontrado.");
-      }
+      setLoading(true);
+      // Fazer a chamada para a sua API aqui
+      const response = await fetch(
+        "https://atms-app.com/wp/wp-json/custom-atm-api/v1/atms"
+      );
+      const data = await response.json();
+      setAllATMs(data);
+      setLoading(false);
     } catch (error) {
-      console.error("Erro ao buscar registro:", error);
+      console.error("Erro ao buscar registros:", error);
+      setLoading(false);
     }
   };
 
- 
+  const handleSearch = () => {
+    let filteredResult = [];
+
+    if (searchType === "id") {
+      filteredResult = allATMs.filter(
+        (atm) => atm.id === parseInt(searchTerm, 10)
+      );
+    } else if (searchType === "name") {
+      filteredResult = allATMs.filter((atm) =>
+        atm.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    } else if (searchType === "location") {
+      filteredResult = allATMs.filter((atm) =>
+        atm.location.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setSearchResult(filteredResult);
+  };
+
+  // UseEffect para chamar fetchData quando o componente monta
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   // UseEffect para chamar handleSearch quando o searchTerm muda
   useEffect(() => {
     if (searchTerm) {
@@ -92,18 +56,16 @@ const SearchATM = () => {
     } else {
       setSearchResult(null);
     }
-  }, [searchTerm]);
+  }, [searchTerm, searchType, allATMs]);
 
   return (
     <div className="container mx-auto mt-8 p-4">
-      <h1 className="mb-4 text-2xl font-semibold">
-        Pesquisar ATMs
-      </h1>
+      <h1 className="mb-4 text-2xl font-semibold">Pesquisar ATMs</h1>
       <div className="mb-4 flex items-center space-x-2">
         <select
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}
-          className="rounded-md text-xs border py-2 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="rounded-md border py-2 px-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="id">ID do ATM</option>
           <option value="name">Nome do ATM</option>
@@ -120,19 +82,48 @@ const SearchATM = () => {
         />
         <button
           onClick={handleSearch}
+          disabled={loading}
           className="cursor-pointer rounded-md bg-blue-500 py-2 px-4 text-white hover:bg-blue-600"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-
+          {loading ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              className="h-5 w-5 animate-spin"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 8v4l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+          )}
         </button>
       </div>
 
       {searchTerm && searchResult && searchResult.length > 0 ? (
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {searchResult.map((registro, index) => (
-            <ATMCard key={index} atm={registro.atmData} />
+            <ATMCard key={index} atm={registro} />
           ))}
         </div>
       ) : searchTerm ? (
