@@ -8,7 +8,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['react-slick'],
+      external: ['react-slick', 'slick-carousel/slick/slick.css'],
     },
   },
 });
