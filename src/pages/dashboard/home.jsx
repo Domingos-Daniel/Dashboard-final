@@ -30,7 +30,7 @@ import {
   ordersOverviewData,
 } from "@/data";
 import chartData from "../../data/line-chart-data-01"; // Importe os dados do gráfico
-import Slide from "./Slider";
+//import Slide from "./Slider";
 
 import DataSyncComponent from "../../DataSyncComponent";
 import PieChart from "@/widgets/charts/PieChart";
@@ -58,7 +58,7 @@ export function Home() {
 
   return (
     <div className="mt-12">
-      <Slide />
+      {/*<Slide */}
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
         {statsData.map(({ icon, title, footer, ...rest }) => (
           <StatisticsCard
