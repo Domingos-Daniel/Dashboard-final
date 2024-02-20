@@ -30,7 +30,7 @@ import {
   ordersOverviewData,
 } from "@/data";
 import chartData from "../../data/line-chart-data-01"; // Importe os dados do gráfico
-//import Slide from "./Slider";
+//import Slide from "./Slider"; 
 
 import DataSyncComponent from "../../DataSyncComponent";
 import PieChart from "@/widgets/charts/PieChart";
