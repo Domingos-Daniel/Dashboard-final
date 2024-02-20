@@ -33,20 +33,16 @@ export function Atm() {
     yellow: "Pendente",
     red: "Urgente",
   };
-  const handleGerarRelatorio = () => {
-    if (!filterColor) {
-      console.error("Selecione uma cor antes de gerar o relatório.");
-      return;
-    }
 
-    if (formatoRelatorio === "pdf") {
-      generateAllATMsPDF(filterColor);
-    } else if (formatoRelatorio === "csv") {
-      generateAllATMsCSV(filterColor);
-    } else if (formatoRelatorio === "txt") {
-      generateAllATMsTXT(filterColor);
+  const generateAllATMsReport = (filter, formato) => {
+    if (formato === "pdf") {
+      generateAllATMsPDF(filter);
+    } else if (formato === "csv") {
+      generateAllATMsCSV(filter);
+    } else if (formato === "txt") {
+      generateAllATMsTXT(filter);
     } else {
-      console.error("Formato de relatório não suportado:", formatoRelatorio);
+      console.error("Formato de relatório não suportado:", formato);
     }
   };
 
@@ -337,7 +333,9 @@ export function Atm() {
 
               <button
                 className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-                onClick={() => generateAllATMsPDF(filterColor)}
+                onClick={() =>
+                  generateAllATMsReport(filterColor, formatoRelatorio)
+                }
               >
                 {`Gerar Relatório de ${filterLabels[filterColor]} ATMs`}
               </button>
