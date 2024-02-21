@@ -14,6 +14,7 @@ import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
 import Atm from "@/pages/dashboard/atm";
 import SearchATM from "@/pages/dashboard/SearchATM";
 import ATMByAgency from "./pages/dashboard/ATMByAgency";
+import Relatorio from "./pages/dashboard/Relatorio2";
 import ATMCharts from "@/pages/dashboard/ATMCharts";
 import { SignIn, SignUp } from "@/pages/auth";
 import App from "@/pages/permissions/App";
@@ -43,7 +44,7 @@ export const routes = [
         icon: <ChartBarIcon {...icon} />,
         name: "Relatórios",
         path: "/relatorio",
-        element: <ATMCharts />,
+        element: <Relatorio />,
       },
 
       {
