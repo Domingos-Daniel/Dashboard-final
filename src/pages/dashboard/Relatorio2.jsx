@@ -154,7 +154,7 @@ const Relatorio = () => {
     return (
       <div className="rounded bg-white p-4 shadow-md">
         <h2 className="mb-4 text-xl font-bold">
-          Evolução dos Problemas nos ATMs
+          Registo dos Problemas nos ATMs
         </h2>
         <div className="border-t border-gray-200 pt-4">
           <ApexChart
@@ -201,25 +201,26 @@ const Relatorio = () => {
     // Adicionar logotipo
     pdf.addImage(imgData, "JPEG", 10, 10, 40, 40);
 
-    // Adicionar título e data
+    // Adicionar título e datas de início e fim
     pdf.setFontSize(16);
     pdf.text("Relatório de ATMs", 60, 25);
     pdf.setFontSize(12);
-    pdf.text("Data: " + new Date().toLocaleDateString(), 60, 35);
+    pdf.text("Data de Início: " + startDateFilter, 60, 35);
+    pdf.text("Data de Fim: " + endDateFilter, 60, 45);
 
     // Adicionar tabela de dados filtrados
     const headers = [
       [
         "ID",
-        "Location",
-        "Name",
-        "Cash",
-        "Coins",
-        "System Status",
-        "Integrity",
-        "Manager Phone",
-        "Manager Name",
-        "Date Saved",
+        "Localização",
+        "Nome",
+        "Dinheiro (AOA)",
+        "Papel",
+        "Status",
+        "Integridade",
+        "Contacto Gestor",
+        "Nome Gestor",
+        "Data Salva",
       ],
     ];
     const data = filteredData.map((atm) => [
@@ -237,11 +238,32 @@ const Relatorio = () => {
     pdf.autoTable({
       head: headers,
       body: data,
-      startY: 50,
+      startY: 60, // Ajuste a posição vertical conforme necessário
     });
 
+    // Adicionar rodapé
+    const pageCount = pdf.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      pdf.setPage(i);
+      pdf.text(
+        `Processado por computador em ${new Date().toLocaleString()}`,
+        30,
+        pdf.internal.pageSize.height - 10
+      );
+    }
+
     // Salvar ou abrir o PDF
-    pdf.save("relatorio.pdf");
+    const fileName = `relatorio-atms-${formatDate(new Date())}.pdf`;
+    pdf.save(fileName);
+  };
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}${month}${day}-${hours}${minutes}`;
   };
 
   const generateXLSX = () => {
@@ -249,26 +271,45 @@ const Relatorio = () => {
     const ws = XLSX.utils.json_to_sheet(filteredData);
     XLSX.utils.book_append_sheet(wb, ws, "Relatorio");
 
-    // Salve ou abra o arquivo XLSX
-    XLSX.writeFile(wb, "relatorio.xlsx");
+    // Adicione a data e hora no nome do arquivo
+    const fileName = `relatorio-atms-${formatDate(new Date())}.xlsx`;
+
+    // Salvar ou abrir o arquivo XLSX
+    XLSX.writeFile(wb, fileName);
   };
 
   const generateTXT = () => {
-    const txtContent = `Relatório de ATMs\nData: ${new Date().toLocaleDateString()}\n\n`;
+    let txtContent = `Relatório de ATMs\nData de Início: ${startDateFilter}\nData de Fim: ${endDateFilter}\n\n`;
 
-    // Adicione mais conteúdo conforme necessário
+    // Adicione mais informações conforme necessário
+    txtContent +=
+      "ID\tLocation\tName\tCash\tCoins\tSystem Status\tIntegrity\tManager Phone\tManager Name\tDate Saved\n";
 
-    // Salve ou abra o arquivo TXT
+    filteredData.forEach((atm) => {
+      txtContent += `${atm.id}\t${atm.location}\t${atm.name}\t${atm.cash}\t${
+        atm.coins
+      }\t${atm.systemStatus}\t${atm.integrity}\t${atm.managerPhone}\t${
+        atm.managerName
+      }\t${new Date(atm.date_saved).toLocaleDateString()}\n`;
+    });
+
+    // rodapé
+    txtContent += `\nProcessado por computador em ${new Date().toLocaleString()}`;
+
+    // Salvar ou abrir o arquivo TXT
+    const fileName = `relatorio-atms-${formatDate(new Date())}.txt`;
     const blob = new Blob([txtContent], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "relatorio.txt";
+    a.download = fileName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
+
+  // ... (restante do código)
 
   return (
     <div className="container mx-auto mt-5 p-4">
@@ -359,9 +400,9 @@ const Relatorio = () => {
         </div>
       </div>
 
-      <div className="flex w-1/4 items-end">
+      <div className="mb-4 flex w-1/4 items-end">
         <button
-          className="mr-2 rounded bg-blue-500 p-2 text-white"
+          className="mr-2 rounded bg-red-800 p-2 text-white"
           onClick={generatePDF}
         >
           Gerar PDF
@@ -373,7 +414,7 @@ const Relatorio = () => {
           Gerar XLSX
         </button>
         <button
-          className="rounded bg-yellow-500 p-2 text-white"
+          className="rounded bg-yellow-800 p-2 text-white"
           onClick={generateTXT}
         >
           Gerar TXT

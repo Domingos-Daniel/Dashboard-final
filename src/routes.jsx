@@ -9,6 +9,7 @@ import {
   QueueListIcon,
   MagnifyingGlassCircleIcon,
   HomeModernIcon,
+  DocumentChartBarIcon,
 } from "@heroicons/react/24/solid";
 import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
 import Atm from "@/pages/dashboard/atm";
@@ -41,7 +42,7 @@ export const routes = [
       },
 
       {
-        icon: <ChartBarIcon {...icon} />,
+        icon: <DocumentChartBarIcon {...icon} />,
         name: "Relatórios",
         path: "/relatorio",
         element: <Relatorio />,
