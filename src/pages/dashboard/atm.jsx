@@ -159,10 +159,12 @@ export function Atm() {
   const generateAllATMsReport = (filter, formato) => {
     if (formato === "pdf") {
       generateAllATMsPDF(filter);
-    } else if (formato === "csv") {
+    } else if (formato === "xlsx") {
       generateAllATMsXLSX(filter);
     } else if (formato === "txt") {
       generateAllATMsTXT(filter);
+    } else if (formato === "csv") {
+      generateAllATMsCSV(filter);
     } else {
       console.error("Formato de relatório não suportado:", formato);
     }
@@ -469,8 +471,9 @@ export function Atm() {
                   onChange={(e) => setFormatoRelatorio(e.target.value)}
                 >
                   <option value="pdf">PDF ⇕</option>
-                  <option value="csv">CSV</option>
+                  <option value="xlsx">EXCEL</option>
                   <option value="txt">TXT</option>
+                  <option value="csv">CSV</option>
                 </select>
               </div>
 
