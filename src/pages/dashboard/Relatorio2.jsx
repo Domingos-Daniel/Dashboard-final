@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ApexChart from "react-apexcharts";
 import jData from "./j.json";
-
+import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
+import { apiUrl, logo } from "../../apiConfig";
+import "jspdf-autotable";
 const Relatorio = () => {
   const [atmsData, setAtmsData] = useState(jData);
   const [managerFilter, setManagerFilter] = useState("");
@@ -18,8 +21,8 @@ const Relatorio = () => {
     series: [],
   });
   const [totalGanhos, setTotalGanhos] = useState(0);
-
   useEffect(() => {
+    setFilteredData([]); // Limpa os problemas anteriores ao aplicar filtros
     filterData();
   }, [
     managerFilter,
@@ -32,12 +35,6 @@ const Relatorio = () => {
   ]);
 
   const filterData = () => {
-    // Limpar problemas anteriores
-    setFilteredData([]);
-    setProblemMessage("");
-    setLineChartData({ categories: [], series: [] });
-    setTotalGanhos(0);
-
     const filtered = atmsData.filter((atm) => {
       return (
         atm.managerName.toLowerCase().includes(managerFilter.toLowerCase()) &&
@@ -151,29 +148,40 @@ const Relatorio = () => {
     return Array.from(atmMap.values());
   };
 
+  // ...
+
   const renderProblemsChart = () => {
     return (
-      <ApexChart
-        options={{
-          chart: { type: "line", stacked: false, toolbar: { show: false } },
-          xaxis: {
-            categories: lineChartData.categories,
-            labels: { rotate: -45 },
-          },
-          yaxis: { title: { text: "Número de ATMs" } },
-          colors: ["#FF0000", "#00FF00", "#0000FF"],
-          plotOptions: {
-            line: {
-              curve: "smooth",
-            },
-          },
-        }}
-        series={lineChartData.series}
-        type="line"
-        height={300}
-      />
+      <div className="rounded bg-white p-4 shadow-md">
+        <h2 className="mb-4 text-xl font-bold">
+          Evolução dos Problemas nos ATMs
+        </h2>
+        <div className="border-t border-gray-200 pt-4">
+          <ApexChart
+            options={{
+              chart: { type: "line", stacked: false, toolbar: { show: true } },
+              xaxis: {
+                categories: lineChartData.categories,
+                labels: { rotate: -45 },
+              },
+              yaxis: { title: { text: "Número de ATMs" } },
+              colors: ["#FF0000", "#00FF00", "#0000FF"],
+              plotOptions: {
+                line: {
+                  curve: "smooth",
+                },
+              },
+            }}
+            series={lineChartData.series}
+            type="line"
+            height={400}
+          />
+        </div>
+      </div>
     );
   };
+
+  // ...
 
   const handleClearFilters = () => {
     setManagerFilter("");
@@ -183,6 +191,83 @@ const Relatorio = () => {
     setCashThreshold(1000000);
     setCoinsThreshold(800);
     setSystemStatusFilter("off");
+    setFilteredData([]); // Limpa os problemas ao limpar filtros
+  };
+
+  const generatePDF = () => {
+    const pdf = new jsPDF("landscape");
+    const imgData = `data:image/png;base64,` + logo; // Imagem base64
+
+    // Adicionar logotipo
+    pdf.addImage(imgData, "JPEG", 10, 10, 40, 40);
+
+    // Adicionar título e data
+    pdf.setFontSize(16);
+    pdf.text("Relatório de ATMs", 60, 25);
+    pdf.setFontSize(12);
+    pdf.text("Data: " + new Date().toLocaleDateString(), 60, 35);
+
+    // Adicionar tabela de dados filtrados
+    const headers = [
+      [
+        "ID",
+        "Location",
+        "Name",
+        "Cash",
+        "Coins",
+        "System Status",
+        "Integrity",
+        "Manager Phone",
+        "Manager Name",
+        "Date Saved",
+      ],
+    ];
+    const data = filteredData.map((atm) => [
+      atm.id,
+      atm.location,
+      atm.name,
+      atm.cash,
+      atm.coins,
+      atm.systemStatus,
+      atm.integrity,
+      atm.managerPhone,
+      atm.managerName,
+      new Date(atm.date_saved).toLocaleDateString(),
+    ]);
+    pdf.autoTable({
+      head: headers,
+      body: data,
+      startY: 50,
+    });
+
+    // Salvar ou abrir o PDF
+    pdf.save("relatorio.pdf");
+  };
+
+  const generateXLSX = () => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(filteredData);
+    XLSX.utils.book_append_sheet(wb, ws, "Relatorio");
+
+    // Salve ou abra o arquivo XLSX
+    XLSX.writeFile(wb, "relatorio.xlsx");
+  };
+
+  const generateTXT = () => {
+    const txtContent = `Relatório de ATMs\nData: ${new Date().toLocaleDateString()}\n\n`;
+
+    // Adicione mais conteúdo conforme necessário
+
+    // Salve ou abra o arquivo TXT
+    const blob = new Blob([txtContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "relatorio.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -191,7 +276,7 @@ const Relatorio = () => {
 
       <div className="mb-4 flex">
         <div className="mr-4 w-1/4">
-          <label className="mb-2 block">Manager:</label>
+          <label className="mb-2 block">Gestor:</label>
           <input
             type="text"
             className="w-full border p-2"
@@ -233,7 +318,7 @@ const Relatorio = () => {
 
       <div className="mb-4 flex">
         <div className="mr-4 w-1/4">
-          <label className="mb-2 block">Limite de Cash:</label>
+          <label className="mb-2 block">Limite de Dinheiro:</label>
           <input
             type="number"
             className="w-full border p-2"
@@ -243,7 +328,7 @@ const Relatorio = () => {
         </div>
 
         <div className="mr-4 w-1/4">
-          <label className="mb-2 block">Limite de Coins:</label>
+          <label className="mb-2 block">Limite de Papel:</label>
           <input
             type="number"
             className="w-full border p-2"
@@ -259,8 +344,8 @@ const Relatorio = () => {
             value={systemStatusFilter}
             onChange={(e) => setSystemStatusFilter(e.target.value)}
           >
-            <option value="on">On</option>
-            <option value="off">Off</option>
+            <option value="on">Online</option>
+            <option value="of">Fora de Serviço</option>
           </select>
         </div>
 
@@ -274,35 +359,54 @@ const Relatorio = () => {
         </div>
       </div>
 
+      <div className="flex w-1/4 items-end">
+        <button
+          className="mr-2 rounded bg-blue-500 p-2 text-white"
+          onClick={generatePDF}
+        >
+          Gerar PDF
+        </button>
+        <button
+          className="mr-2 rounded bg-green-500 p-2 text-white"
+          onClick={generateXLSX}
+        >
+          Gerar XLSX
+        </button>
+        <button
+          className="rounded bg-yellow-500 p-2 text-white"
+          onClick={generateTXT}
+        >
+          Gerar TXT
+        </button>
+      </div>
+
       <div className="mb-4">
         <p className="text-red-500">{problemMessage}</p>
       </div>
 
-      <div className="mb-8">{renderProblemsChart()}</div>
+      <div className="mb-8 rounded bg-white p-4 shadow">
+        {renderProblemsChart()}
+      </div>
 
       <div>
         <h2 className="mb-4 text-2xl font-bold">ATMs com Problemas:</h2>
         <ul>
-          {filteredData.map((atm) => (
+          {getMostProblematicATMs(filteredData).map((atm) => (
             <li key={atm.id} className="mb-2">
+              <span>ATM: {atm.name}, </span>
               <span className={atm.cash < cashThreshold ? "text-red-500" : ""}>
-                Cash: {atm.cash},{" "}
+                Dinheiro: {atm.cash},{" "}
               </span>
               <span
                 className={atm.coins < coinsThreshold ? "text-red-500" : ""}
               >
-                Coins: {atm.coins},{" "}
+                Papel: {atm.coins},{" "}
               </span>
-              <span
-                className={
-                  atm.systemStatus !== systemStatusFilter ? "text-red-500" : ""
-                }
-              >
-                System Status: {atm.systemStatus}
-              </span>
+              <span>Status: {atm.systemStatus}</span>
             </li>
           ))}
         </ul>
+
         <p className="mt-4 text-lg font-bold">Total de Ganhos: {totalGanhos}</p>
       </div>
     </div>
