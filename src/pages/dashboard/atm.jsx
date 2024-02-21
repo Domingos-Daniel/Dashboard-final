@@ -13,6 +13,7 @@ import {
 import { apiUrl, logo } from "../../apiConfig";
 import jsPDF from "jspdf";
 import Papa from "papaparse";
+import * as XLSX from "xlsx";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -73,11 +74,93 @@ export function Atm() {
     }
   };
 
+  //////////////////
+
+  const generateAllATMsXLSX = (filter) => {
+    // Lógica para obter os dados (semelhante ao seu código existente)
+    let filteredATMs;
+    if (filter === "all") {
+      filteredATMs = atms;
+    } else {
+      filteredATMs = filterATMsByColor(atms, filter);
+    }
+
+    // Preparar os dados para o formato XLSX
+    const data = [
+      [
+        "Nome do ATM",
+        "Gerente",
+        "Localização",
+        "Dinheiro (Kwanzas)",
+        "Integridade (%)",
+        "Papel (unidades)",
+        "Status",
+      ],
+      ...filteredATMs.map((atm) => [
+        atm.name,
+        atm.managerName,
+        atm.location,
+        atm.cash,
+        atm.integrity,
+        atm.coins,
+        atm.systemStatus,
+      ]),
+    ];
+
+    // Criar uma planilha XLSX
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "ATMs");
+
+    // Gera o arquivo Excel e faz o download
+    XLSX.writeFile(wb, `relatorio-${filterLabels[filterColor]}-atms.xlsx`);
+  };
+
+  /////
+
+  const generateAllATMsTXT = (filter) => {
+    // Lógica para obter os dados (semelhante ao seu código existente)
+    let filteredATMs;
+    if (filter === "all") {
+      filteredATMs = atms;
+    } else {
+      filteredATMs = filterATMsByColor(atms, filter);
+    }
+
+    // Preparar os dados para o formato TXT
+    const data = filteredATMs
+      .map((atm) => {
+        return `
+  Nome do ATM: ${atm.name}
+  Gerente: ${atm.managerName}
+  Localização: ${atm.location}
+  Dinheiro (Kwanzas): ${atm.cash}
+  Integridade (%): ${atm.integrity}
+  Papel (unidades): ${atm.coins}
+  Status: ${atm.systemStatus}
+  ----------------------
+  `;
+      })
+      .join("");
+
+    // Criar um Blob e gerar uma URL
+    const blob = new Blob([data], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    // Criar um link para o download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `relatorio-${filterLabels[filterColor]}-atms.txt`;
+    a.click();
+  };
+
+  ////
+
   const generateAllATMsReport = (filter, formato) => {
     if (formato === "pdf") {
       generateAllATMsPDF(filter);
     } else if (formato === "csv") {
-      generateAllATMsCSV(filter);
+      generateAllATMsXLSX(filter);
     } else if (formato === "txt") {
       generateAllATMsTXT(filter);
     } else {
