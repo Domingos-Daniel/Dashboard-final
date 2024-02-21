@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 import { apiUrl, logo } from "../../apiConfig";
 import jsPDF from "jspdf";
+import Papa from "papaparse";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -32,6 +33,44 @@ export function Atm() {
     green: "Funcional",
     yellow: "Pendente",
     red: "Urgente",
+  };
+
+  /////////////////////////////////
+
+  const generateAllATMsCSV = (filter) => {
+    let filteredATMs;
+
+    if (filter === "all") {
+      filteredATMs = atms;
+    } else {
+      filteredATMs = filterATMsByColor(atms, filter);
+    }
+
+    const csvData = Papa.unparse(filteredATMs);
+
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    const filename = `relatorio-${filterLabels[filterColor]}-atms.csv`;
+
+    if (navigator.msSaveBlob) {
+      // IE 10+
+      navigator.msSaveBlob(blob, filename);
+    } else {
+      const link = document.createElement("a");
+
+      if (link.download !== undefined) {
+        // Browsers com suporte para o atributo download
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        console.error(
+          "Seu navegador não suporta o download direto deste arquivo. Tente usando um navegador diferente."
+        );
+      }
+    }
   };
 
   const generateAllATMsReport = (filter, formato) => {

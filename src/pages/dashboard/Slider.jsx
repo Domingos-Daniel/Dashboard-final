@@ -6,7 +6,7 @@ import { apiUrl } from "../../apiConfig";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const Slide = () => {
+const Slide = () => { 
   const [atms, setAtms] = useState([]);
 
   useEffect(() => {
