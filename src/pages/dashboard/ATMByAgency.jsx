@@ -35,7 +35,7 @@ const ATMByAgency = () => {
         atm.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     } else if (searchType === "id") {
-      filteredResult = allATMs.filter((atm) => atm.id === parseInt(searchTerm));
+      filteredResult = allATMs.filter((atm) => atm.id_atm === parseInt(searchTerm));
     }
 
     setSearchResult(filteredResult);

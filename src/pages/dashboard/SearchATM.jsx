@@ -29,9 +29,10 @@ const SearchATM = () => {
 
     if (searchType === "id") {
       filteredResult = allATMs.filter(
-        (atm) => atm.id === parseInt(searchTerm, 10)
+        (atm) => atm.id_atm === parseInt(searchTerm, 10)
       );
-    } else if (searchType === "name") {
+    }
+     else if (searchType === "name") {
       filteredResult = allATMs.filter((atm) =>
         atm.name.toLowerCase().includes(searchTerm.toLowerCase())
       );

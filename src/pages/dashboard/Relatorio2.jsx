@@ -45,7 +45,7 @@ const Relatorio = () => {
           atm.coins < coinsThreshold ||
           atm.systemStatus !== systemStatusFilter)
       );
-    });
+    }); 
 
     setFilteredData(filtered);
 
@@ -111,7 +111,7 @@ const Relatorio = () => {
         mostProblematicDates.length > 0
           ? `Nos dias ${mostProblematicDates.join(
               ", "
-            )} há muitos problemas. Sugerimos verificar [sua sugestão específica aqui].`
+            )} há muitos problemas. Sugerimos verificar os problemas em cada atm neste intervalo de tempo.`
           : ""
       } Total de ganhos: ${totalGanhosFiltered}.`
     );
@@ -266,17 +266,26 @@ const Relatorio = () => {
     return `${year}${month}${day}-${hours}${minutes}`;
   };
 
+
   const generateXLSX = () => {
     const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(filteredData);
-    XLSX.utils.book_append_sheet(wb, ws, "Relatorio");
-
+    const ws = XLSX.utils.aoa_to_sheet([
+      ["ID", "Localização", "Nome", "Dinheiro", "Papel", "Estado do Sistema", "Integridade", "Telefone do Gerente", "Nome do Gerente", "Data Registo"],
+    ]);
+  
+    // Adicione os dados ao worksheet
+    XLSX.utils.sheet_add_json(ws, filteredData, { skipHeader: true, origin: -1 });
+  
+    XLSX.utils.book_append_sheet(wb, ws, "Relatório");
+  
     // Adicione a data e hora no nome do arquivo
     const fileName = `relatorio-atms-${formatDate(new Date())}.xlsx`;
-
+  
     // Salvar ou abrir o arquivo XLSX
     XLSX.writeFile(wb, fileName);
   };
+  
+  
 
   const generateTXT = () => {
     let txtContent = `Relatório de ATMs\nData de Início: ${startDateFilter}\nData de Fim: ${endDateFilter}\n\n`;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Dashboard, Auth } from "@/layouts";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import firebaseConfig  from "@/pages/dashboard/firebaseConfig";
 
 // Inicialização do Firebase
@@ -16,9 +16,18 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      if (!user && window.location.pathname !== "/auth/sign-in") {
+        window.location.href = "/auth/sign-in";
+      }
     });
+
+    // Clean up the unsubscribe function and sign out the user when the component unmounts
+    return () => {
+      unsubscribe();
+      signOut(auth);
+    };
   }, []);
 
   return (

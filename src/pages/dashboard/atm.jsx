@@ -72,7 +72,7 @@ export function Atm() {
         );
       }
     }
-  };
+  }; 
 
   //////////////////
 
@@ -103,7 +103,7 @@ export function Atm() {
         atm.cash,
         atm.integrity,
         atm.coins,
-        atm.systemStatus,
+        atm.systemStatus, 
       ]),
     ];
 

@@ -17,14 +17,14 @@ const Slide = () => {
           (atm) =>
             atm.cash < 30000 || atm.coins < 800 || atm.systemStatus === "of"
         );
-        setAtms(filteredAtms);
+        setAtms(filteredAtms); 
       } catch (error) {
         console.error("Erro ao buscar os dados da API:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, []); 
 
   let sliderRef = useRef(null);
   const next = () => {
