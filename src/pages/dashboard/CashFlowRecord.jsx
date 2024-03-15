@@ -128,7 +128,7 @@ const CashFlowRecord = ({ atm }) => {
   }
 
   return (
-    <div className="h-full w-full overflow-visible p-4">
+    <div className="h-full w-full overflow-x-auto overflow-y-scroll p-4">
       <h2 className="mb-4 text-2xl font-bold">Registro de Fluxo de Caixa</h2>
 
       <button
@@ -153,7 +153,7 @@ const CashFlowRecord = ({ atm }) => {
         <Chart
           options={{
             chart: {
-              height: "auto", // Definir a altura como automática
+              height: 350,
               type: "line",
               zoom: {
                 enabled: false,
@@ -180,7 +180,8 @@ const CashFlowRecord = ({ atm }) => {
           }}
           series={serviceData.series}
           type="line"
-          width="100%" // Definir a largura como 100% para torná-lo responsivo
+          width={700}
+          height={320}
         />
       </div>
       <p className="mb-4">

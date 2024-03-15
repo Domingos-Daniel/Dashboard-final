@@ -3,7 +3,10 @@ import Chart from "react-apexcharts";
 
 const ErrorLogs = ({ atm }) => {
   const [errorLogsData, setErrorLogsData] = useState({
-    errorFrequency: Array.from({ length: 7 }, () => Math.floor(Math.random() * 9) + 1),
+    errorFrequency: Array.from(
+      { length: 7 },
+      () => Math.floor(Math.random() * 9) + 1
+    ),
     possibleErrors: [
       "Falha ao dispensar dinheiro",
       "Falha na leitura de cartões",
@@ -25,7 +28,20 @@ const ErrorLogs = ({ atm }) => {
     } else if (selectedInterval === "monthly") {
       return ["Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5"];
     } else if (selectedInterval === "annual") {
-      return ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+      return [
+        "Jan",
+        "Fev",
+        "Mar",
+        "Abr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Set",
+        "Out",
+        "Nov",
+        "Dez",
+      ];
     }
   };
 
@@ -37,7 +53,10 @@ const ErrorLogs = ({ atm }) => {
     } else if (selectedInterval === "monthly") {
       return Array.from({ length: 5 }, () => Math.floor(Math.random() * 9) + 1);
     } else if (selectedInterval === "annual") {
-      return Array.from({ length: 12 }, () => Math.floor(Math.random() * 9) + 1);
+      return Array.from(
+        { length: 12 },
+        () => Math.floor(Math.random() * 9) + 1
+      );
     }
   };
 
@@ -56,18 +75,18 @@ const ErrorLogs = ({ atm }) => {
   };
 
   return (
-    <div className="overflow-y: auto h-4/6 w-4/6 rounded-lg bg-white p-4">
+    <div className="h-full w-full overflow-x-auto overflow-y-scroll p-4">
       <h2>Logs de Erros nos Últimos 7 Dias do {atm.name}</h2>
       <select
-          value={selectedInterval}
-          onChange={(e) => setSelectedInterval(e.target.value)}
-          className="border border-gray-300 rounded-md p-1"
-        >
-          <option value="daily">Diário</option>
-          <option value="weekly">Semanal</option>
-          <option value="monthly">Mensal</option>
-          <option value="annual">Anual</option>
-        </select>
+        value={selectedInterval}
+        onChange={(e) => setSelectedInterval(e.target.value)}
+        className="rounded-md border border-gray-300 p-1"
+      >
+        <option value="daily">Diário</option>
+        <option value="weekly">Semanal</option>
+        <option value="monthly">Mensal</option>
+        <option value="annual">Anual</option>
+      </select>
       <div className="mt-4">
         <p>
           Nos últimos 7 dias, foram registrados os seguintes erros no ATM{" "}
