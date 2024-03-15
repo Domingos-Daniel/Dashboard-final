@@ -108,7 +108,7 @@ const Slide = () => {
                 Ver Detalhes
               </button>
             </p>
-          </div>
+          </div> 
         ))}
       </Slider>
       {selectedATM && (

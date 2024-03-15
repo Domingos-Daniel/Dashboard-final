@@ -233,8 +233,8 @@ const ATMCard = ({ atm }) => {
       </div>
 
       {isCashFlowModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
-          <div className="w-1/2 rounded-lg bg-white p-6 font-semibold shadow-md">
+        <div className="fixed top-0 left-0 z-50 flex w-full items-center justify-center overflow-visible  bg-black bg-opacity-50">
+          <div className=" w-1/2 rounded-lg bg-white p-6 font-semibold shadow-md">
             <div className="flex justify-end">
               <span
                 className="close cursor-pointer"

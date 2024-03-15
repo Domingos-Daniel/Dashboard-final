@@ -436,10 +436,20 @@ export function Atm() {
       ) : (
         <Tabs value={viewMode}>
           <TabsHeader>
-            <Tab key="card" value="card" onClick={() => setViewMode("card")}>
+            <Tab
+              className={`relative ${viewMode === "card" ? "z-0" : ""}`}
+              key="card"
+              value="card"
+              onClick={() => setViewMode("card")}
+            >
               Visualização em Cartão
             </Tab>
-            <Tab key="list" value="list" onClick={() => setViewMode("list")}>
+            <Tab
+              className={`relative ${viewMode === "list" ? "z-0" : ""}`}
+              key="list"
+              value="list"
+              onClick={() => setViewMode("list")}
+            >
               Visualização em Lista
             </Tab>
           </TabsHeader>
