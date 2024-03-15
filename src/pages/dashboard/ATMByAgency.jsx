@@ -35,7 +35,9 @@ const ATMByAgency = () => {
         atm.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     } else if (searchType === "id") {
-      filteredResult = allATMs.filter((atm) => atm.id_atm === parseInt(searchTerm));
+      filteredResult = allATMs.filter(
+        (atm) => atm.id_atm === parseInt(searchTerm)
+      );
     }
 
     setSearchResult(filteredResult);
@@ -117,14 +119,18 @@ const ATMByAgency = () => {
         </button>
       </div>
 
-      {searchTerm && searchResult && searchResult.length > 0 ? (
+      {loading ? (
+        <p className="mt-4 animate-pulse text-gray-500">Pesquisando...</p>
+      ) : searchTerm && searchResult && searchResult.length > 0 ? (
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {searchResult.map((registro) => (
-            <ATMCard key={registro.id} atm={registro} />
+          {searchResult.map((registro, index) => (
+            <ATMCard key={index} atm={registro} />
           ))}
         </div>
       ) : searchTerm ? (
-        <p className="mt-4 text-red-500">Nenhum registro encontrado.</p>
+        <p className="mt-4 animate-pulse text-red-500">
+          Nenhum registro encontrado.
+        </p>
       ) : null}
     </div>
   );

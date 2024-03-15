@@ -1,3 +1,4 @@
+/* Slider */
 .slider-container {
   position: relative;
   background-color: rgba(38, 50, 56, 0.9);
@@ -30,7 +31,8 @@
   background-color: #ddd;
 }
 
-.slide-track {
+/* Slider Track */
+.slider-track {
   display: flex;
   animation: scroll 40s linear infinite;
 }
@@ -66,3 +68,65 @@
     transform: translateX(-100%);
   }
 }
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 400px;
+}
+
+.close-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #0056b3;
+}
+
+/* Slider */
+.slider-container {
+  position: relative;
+}
+
+.slider-navigation {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.slider-button {
+  background-color: rgba(212, 215, 217, 0.9);
+  border: none;
+  color: #333;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 1.5em;
+}
+
+.slider-button:hover {
+  background-color: #ddd;
+}
+
+/* Restante dos estilos permanecem iguais */

@@ -58,7 +58,7 @@ export const routes = [
       {
         icon: <MagnifyingGlassCircleIcon {...icon} />,
         name: "Pesquisar ATM",
-        path: "/search",
+        path: "/search/:id", // Atualize o caminho para incluir o parâmetro id
         element: <SearchATM />,
       },
 

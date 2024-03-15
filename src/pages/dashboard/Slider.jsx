@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 import "./Slider.css";
 import { apiUrl } from "../../apiConfig";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const Slide = () => { 
+const Slide = () => {
   const [atms, setAtms] = useState([]);
+  const [selectedATM, setSelectedATM] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,14 +20,14 @@ const Slide = () => {
           (atm) =>
             atm.cash < 30000 || atm.coins < 800 || atm.systemStatus === "of"
         );
-        setAtms(filteredAtms); 
+        setAtms(filteredAtms);
       } catch (error) {
         console.error("Erro ao buscar os dados da API:", error);
       }
     };
 
     fetchData();
-  }, []); 
+  }, []);
 
   let sliderRef = useRef(null);
   const next = () => {
@@ -67,36 +70,30 @@ const Slide = () => {
       : problems.join(", ");
   };
 
+  const handleOpenModal = (atm) => {
+    setSelectedATM(atm);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedATM(null);
+  };
+
+  const goToNextSlide = () => {
+    sliderRef.slickNext();
+  };
+
+  const goToPrevSlide = () => {
+    sliderRef.slickPrev();
+  };
+
   return (
     <div className="slider-container">
-      <div className="button-container">
-        <button className="button" onClick={previous}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z"
-              clip-rule="evenodd"
-            />
-          </svg>
+      <div className="slider-navigation">
+        <button className="slider-button" onClick={goToPrevSlide}>
+          {"<"}
         </button>
-        <button className="button" onClick={next}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
-              clip-rule="evenodd"
-            />
-          </svg>
+        <button className="slider-button" onClick={goToNextSlide}>
+          {">"}
         </button>
       </div>
       <Slider {...settings} ref={(slider) => (sliderRef = slider)}>
@@ -104,10 +101,82 @@ const Slide = () => {
           <div className={`slide ${getProblemDescription(atm)}`} key={index}>
             <p>
               | {atm.name}&nbsp;| Problema: {getProblemDescription(atm)}
+              <button
+                className="modal-button ml-2 rounded-md bg-blue-500 px-2 py-1 text-white"
+                onClick={() => handleOpenModal(atm)}
+              >
+                Ver Detalhes
+              </button>
             </p>
           </div>
         ))}
       </Slider>
+      {selectedATM && (
+        <div className="fixed top-0 left-0 z-50 flex h-full w-full items-center justify-center">
+          <div className="w-96 rounded-lg bg-white p-4 font-semibold">
+            <h2 className="mb-3 pb-4 text-xl font-bold">Detalhes do ATM</h2>
+            <p className="pb-2">ID: {selectedATM.id_atm}</p>
+            <p className="pb-2">Nome: {selectedATM.name}</p>
+            <p className="border-b pb-4">Localização: {selectedATM.location}</p>
+
+            {selectedATM.integrity < 50 && (
+              <p className="border-b pb-2 text-red-500">
+                A integridade está muito baixa e necessita de assistência.
+              </p>
+            )}
+
+            {selectedATM.cash < 70000 && (
+              <p className="border-b pb-2 text-red-500">
+                Necessita de recarga (dinheiro abaixo de 70000).
+              </p>
+            )}
+
+            {selectedATM.cash > 70000 && (
+              <p className="border-b pb-2 text-green-500">
+                Tem Dinheiro suficiente.
+              </p>
+            )}
+
+            {selectedATM.cash > 500 && (
+              <p className="border-b pb-2 text-green-500">
+                Tem Papel suficiente.
+              </p>
+            )}
+
+            {selectedATM.coins < 500 && (
+              <p className="border-b pb-2 text-red-500">
+                Necessita de recarga de papel (papel abaixo de 500).
+              </p>
+            )}
+
+            {selectedATM.systemStatus === "on" && (
+              <p className="border-b pb-2 text-green-500">
+                O sistema está ligado e funcionando normalmente.
+              </p>
+            )}
+
+            {selectedATM.systemStatus === "of" && (
+              <p className="border-b pb-2 text-red-500">
+                O ATM está sem sistema, necessita de assistência urgente.
+              </p>
+            )}
+
+            <Link
+              to={`/dashboard/search/${selectedATM.id_atm}`}
+              className="more-info-button ml-2 rounded-md bg-green-500 px-2 py-1 text-white"
+            >
+              Mais Informações
+            </Link>
+
+            <button
+              className="mt-4 rounded-md bg-red-500 px-2 py-1 text-white"
+              onClick={handleCloseModal}
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

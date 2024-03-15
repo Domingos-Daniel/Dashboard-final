@@ -28,6 +28,7 @@ export function Atm() {
   const [startDate, setStartDate] = useState(new Date());
   const [filterValue, setFilterValue] = useState("all");
   const [formatoRelatorio, setFormatoRelatorio] = useState("pdf");
+  const [loading, setLoading] = useState(false); // Variável de estado para controlar o estado de carregamento
 
   const filterLabels = {
     all: "Todos",
@@ -72,7 +73,7 @@ export function Atm() {
         );
       }
     }
-  }; 
+  };
 
   //////////////////
 
@@ -103,7 +104,7 @@ export function Atm() {
         atm.cash,
         atm.integrity,
         atm.coins,
-        atm.systemStatus, 
+        atm.systemStatus,
       ]),
     ];
 
@@ -294,14 +295,16 @@ export function Atm() {
 
     doc.save(filename);
   };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true); // Define o estado de carregamento como true ao começar a buscar os dados
         const response = await axios.get(apiUrl);
         setATMs(response.data);
+        setLoading(false); // Define o estado de carregamento como false após receber os dados
       } catch (error) {
         console.error("Erro ao buscar os dados:", error);
+        setLoading(false); // Em caso de erro, também definimos o estado de carregamento como false
       }
     };
 
@@ -428,89 +431,93 @@ export function Atm() {
 
   return (
     <>
-      <Tabs value={viewMode}>
-        <TabsHeader>
-          <Tab key="card" value="card" onClick={() => setViewMode("card")}>
-            Visualização em Cartão
-          </Tab>
-          <Tab key="list" value="list" onClick={() => setViewMode("list")}>
-            Visualização em Lista
-          </Tab>
-        </TabsHeader>
-        <TabsBody>
-          <TabPanel key="card" value="card">
-            <div className="filter-select">
-              <div className="relative mx-2 inline-flex">
-                <select
-                  className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-2 leading-tight shadow hover:border-gray-400 focus:outline-none"
-                  onChange={(e) => {
-                    handleFilterChange(e.target.value);
-                    setFilterValue(e.target.value);
-                  }}
-                >
-                  <option value="all">Todos ⇕</option>
-                  <option value="green">100%</option>
-                  <option value="yellow">Pendente</option>
-                  <option value="red">Urgente</option>
-                </select>
-              </div>
+      {atms.length === 0 && loading ? ( // Exibir a mensagem de carregamento apenas se a lista de ATMs estiver vazia e loading for true
+        <p className="mt-4 animate-pulse text-gray-500">Carregando ATMs...</p>
+      ) : (
+        <Tabs value={viewMode}>
+          <TabsHeader>
+            <Tab key="card" value="card" onClick={() => setViewMode("card")}>
+              Visualização em Cartão
+            </Tab>
+            <Tab key="list" value="list" onClick={() => setViewMode("list")}>
+              Visualização em Lista
+            </Tab>
+          </TabsHeader>
+          <TabsBody>
+            <TabPanel key="card" value="card">
+              <div className="filter-select">
+                <div className="relative mx-2 inline-flex">
+                  <select
+                    className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-2 leading-tight shadow hover:border-gray-400 focus:outline-none"
+                    onChange={(e) => {
+                      handleFilterChange(e.target.value);
+                      setFilterValue(e.target.value);
+                    }}
+                  >
+                    <option value="all">Todos ⇕</option>
+                    <option value="green">100%</option>
+                    <option value="yellow">Pendente</option>
+                    <option value="red">Urgente</option>
+                  </select>
+                </div>
 
-              <button
-                className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-                onClick={() =>
-                  generateAllATMsReport(filterColor, formatoRelatorio)
-                }
-              >
-                {`Gerar Relatório de ${filterLabels[filterColor]} ATMs`}
-              </button>
-
-              <div className="relative mx-2 inline-flex">
-                <select
-                  className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-2 leading-tight shadow hover:border-gray-400 focus:outline-none"
-                  value={formatoRelatorio}
-                  onChange={(e) => setFormatoRelatorio(e.target.value)}
+                <button
+                  className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+                  onClick={() =>
+                    generateAllATMsReport(filterColor, formatoRelatorio)
+                  }
                 >
-                  <option value="pdf">PDF ⇕</option>
-                  <option value="xlsx">EXCEL</option>
-                  <option value="txt">TXT</option>
-                  <option value="csv">CSV</option>
-                </select>
-              </div>
+                  {`Gerar Relatório de ${filterLabels[filterColor]} ATMs`}
+                </button>
 
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-              />
-            </div>
-            <div className="App mt-5 flex items-center justify-center">
-              <div className="flex flex-wrap gap-6 sm:gap-4 md:gap-6 lg:gap-8">
-                {currentATMs.map((atm) => {
-                  sendSMS(atm);
-                  return <ATMCard key={atm.id} atm={atm} />;
-                })}
+                <div className="relative mx-2 inline-flex">
+                  <select
+                    className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-2 leading-tight shadow hover:border-gray-400 focus:outline-none"
+                    value={formatoRelatorio}
+                    onChange={(e) => setFormatoRelatorio(e.target.value)}
+                  >
+                    <option value="pdf">PDF ⇕</option>
+                    <option value="xlsx">EXCEL</option>
+                    <option value="txt">TXT</option>
+                    <option value="csv">CSV</option>
+                  </select>
+                </div>
+
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                />
               </div>
-            </div>
-          </TabPanel>
-          <TabPanel key="list" value="list">
-            <div className="filter-select">
-              <div className="relative inline-flex">
-                <select
-                  className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-1 leading-tight shadow hover:border-gray-400 focus:outline-none"
-                  onChange={(e) => handleFilterChange(e.target.value)}
-                >
-                  <option value="all">Todos</option>
-                  <option value="green">100%</option>
-                  <option value="yellow">Pendente</option>
-                  <option value="red">Urgente</option>
-                </select>
+              <div className="App mt-5 flex items-center justify-center">
+                <div className="flex flex-wrap gap-6 sm:gap-4 md:gap-6 lg:gap-8">
+                  {currentATMs.map((atm) => {
+                    sendSMS(atm);
+                    return <ATMCard key={atm.id} atm={atm} />;
+                  })}
+                </div>
               </div>
-            </div>
-            <div className="App mt-5">
-              <ATMList atms={currentATMs} />
-            </div>
-          </TabPanel>
-        </TabsBody>
-      </Tabs>
+            </TabPanel>
+            <TabPanel key="list" value="list">
+              <div className="filter-select">
+                <div className="relative inline-flex">
+                  <select
+                    className="focus:shadow-outline appearance-none rounded border border-gray-300 bg-white px-2 py-1 leading-tight shadow hover:border-gray-400 focus:outline-none"
+                    onChange={(e) => handleFilterChange(e.target.value)}
+                  >
+                    <option value="all">Todos</option>
+                    <option value="green">100%</option>
+                    <option value="yellow">Pendente</option>
+                    <option value="red">Urgente</option>
+                  </select>
+                </div>
+              </div>
+              <div className="App mt-5">
+                <ATMList atms={currentATMs} />
+              </div>
+            </TabPanel>
+          </TabsBody>
+        </Tabs>
+      )}
 
       {atms.length > itemsPerPage && (
         <PaginationButtons

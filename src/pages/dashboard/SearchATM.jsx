@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ATMCard from "./ATMCard"; // Certifique-se de fornecer o caminho correto para o seu componente ATMCard
+import { useParams } from "react-router-dom";
 
 const SearchATM = () => {
   const [searchType, setSearchType] = useState("id");
@@ -7,6 +8,9 @@ const SearchATM = () => {
   const [allATMs, setAllATMs] = useState([]);
   const [searchResult, setSearchResult] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Usar o hook useParams para acessar os parâmetros da URL
+  const { id: idParam } = useParams();
 
   const fetchData = async () => {
     try {
@@ -31,8 +35,7 @@ const SearchATM = () => {
       filteredResult = allATMs.filter(
         (atm) => atm.id_atm === parseInt(searchTerm, 10)
       );
-    }
-     else if (searchType === "name") {
+    } else if (searchType === "name") {
       filteredResult = allATMs.filter((atm) =>
         atm.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -58,6 +61,14 @@ const SearchATM = () => {
       setSearchResult(null);
     }
   }, [searchTerm, searchType, allATMs]);
+
+  // UseEffect para chamar handleSearch quando o idParam muda
+  useEffect(() => {
+    if (idParam) {
+      setSearchType("id");
+      setSearchTerm(idParam);
+    }
+  }, [idParam]);
 
   return (
     <div className="container mx-auto mt-8 p-4">
@@ -121,14 +132,18 @@ const SearchATM = () => {
         </button>
       </div>
 
-      {searchTerm && searchResult && searchResult.length > 0 ? (
+      {loading ? (
+        <p className="mt-4 animate-pulse text-gray-500">Pesquisando...</p>
+      ) : searchTerm && searchResult && searchResult.length > 0 ? (
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {searchResult.map((registro, index) => (
             <ATMCard key={index} atm={registro} />
           ))}
         </div>
       ) : searchTerm ? (
-        <p className="mt-4 text-red-500">Nenhum registro encontrado.</p>
+        <p className="mt-4 animate-pulse text-red-500">
+          Nenhum registro encontrado.
+        </p>
       ) : null}
     </div>
   );
