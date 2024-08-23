@@ -9,7 +9,7 @@ import {
 // Função para fazer a requisição Axios e atualizar as estatísticas
 function fetchDataAndUpdateStatistics() {
   axios
-    .get("https://atms-app.com/wp/wp-json/custom-atm-api/v1/atms")
+    .get("https://my-json-server.typicode.com/Domingos-Daniel/api-teste/atms")
     .then((response) => {
       const atms = response.data;
 

@@ -10,7 +10,7 @@ const RealtimeATMStatusComponent = ({ bgColor }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://atms-app.com/wp/wp-json/custom-atm-api/v1/atms"
+          "https://my-json-server.typicode.com/Domingos-Daniel/api-teste/atms"
         );
         const data = await response.json();
 

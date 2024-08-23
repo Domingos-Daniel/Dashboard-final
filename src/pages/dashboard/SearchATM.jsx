@@ -17,7 +17,7 @@ const SearchATM = () => {
       setLoading(true);
       // Fazer a chamada para a sua API aqui
       const response = await fetch(
-        "https://atms-app.com/wp/wp-json/custom-atm-api/v1/atms"
+        "https://my-json-server.typicode.com/Domingos-Daniel/api-teste/atms"
       );
       const data = await response.json();
       setAllATMs(data);
@@ -33,7 +33,7 @@ const SearchATM = () => {
 
     if (searchType === "id") {
       filteredResult = allATMs.filter(
-        (atm) => atm.id_atm === parseInt(searchTerm, 10)
+        (atm) => atm.id === parseInt(searchTerm, 10)
       );
     } else if (searchType === "name") {
       filteredResult = allATMs.filter((atm) =>

@@ -1,58 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Chart from "react-apexcharts";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
 
 const CashFlowRecord = ({ atm }) => {
+  // Separated PDF generation logic
   const generatePDF = async () => {
-    const doc = new jsPDF("p", "px");
+    try {
+      const doc = new jsPDF("p", "px");
 
-    // Título
-    doc.setFontSize(18);
-    doc.text(`Relatório de Fluxo de Caixa: ${rechargeDates}`, 20, 15);
+      // Title
+      doc.setFontSize(18);
+      doc.text(`Relatório de Fluxo de Caixa: ${rechargeDates}`, 20, 15);
 
-    // Informações
-    doc.setFontSize(12);
-    doc.text(`Datas de Recarga: ${rechargeDates.join(", ")}`, 20, 30);
-    doc.text(`Período de Uso: ${usagePeriod}`, 20, 40);
-    doc.text(`Serviço mais Popular: ${popularService}`, 20, 50);
-    doc.text(`Média de Levantamento: ${averageWithdrawalAmount}`, 20, 60);
+      // Information
+      doc.setFontSize(12);
+      doc.text(`Datas de Recarga: ${rechargeDates.join(", ")}`, 20, 30);
+      doc.text(`Período de Uso: ${usagePeriod}`, 20, 40);
+      doc.text(`Serviço mais Popular: ${popularService}`, 20, 50);
+      doc.text(`Média de Levantamento: ${averageWithdrawalAmount}`, 20, 60);
 
-    // Gráfico
-    const addChartToPdf = async (data, index) => {
-      const chartCanvas = document.createElement("div");
-      chartCanvas.className = "custom-chart";
-      const chartOptions = {
-        type: "line",
-        data: {
-          labels: serviceData.labels,
-          datasets: [{ label: data.name, data: data.data }],
-        },
+      // Chart Rendering and Conversion to Image
+      const addChartToPdf = async (data, index) => {
+        const chartCanvas = document.createElement("div");
+        chartCanvas.className = "custom-chart";
+        const chartOptions = {
+          type: "line",
+          data: {
+            labels: serviceData.labels,
+            datasets: [{ label: data.name, data: data.data }],
+          },
+        };
+        new Chart(chartCanvas, chartOptions);
+
+        const imageDataUrl = await htmlToImage.toPng(chartCanvas);
+        doc.addImage(imageDataUrl, "PNG", 20, 70 + index * 50, 160, 80);
+
+        return imageDataUrl;
       };
-      // Create a chart inside the div
-      new Chart(chartCanvas, chartOptions);
 
-      // Convert the chart div to an image
-      const imageDataUrl = await htmlToImage.toPng(chartCanvas);
+      const chartImgData = await Promise.all(
+        serviceData.series.map((data, index) => addChartToPdf(data, index))
+      );
 
-      // Add the image to the PDF
-      doc.addImage(imageDataUrl, "PNG", 20, 70 + index * 50, 160, 80);
+      // Suggestion
+      doc.text(
+        `Sugestão: ${suggestion}`,
+        20,
+        70 + chartImgData.length * 50 + 10
+      );
 
-      return imageDataUrl;
-    };
-
-    const chartImgData = await Promise.all(
-      serviceData.series.map((data, index) => addChartToPdf(data, index))
-    );
-
-    // Sugestão
-    doc.text(`Sugestão: ${suggestion}`, 20, 70 + chartImgData.length * 50 + 10);
-
-    // Salva o PDF
-    doc.save("relatorio_fluxo_caixa.pdf");
+      // Save PDF
+      doc.save("relatorio_fluxo_caixa.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
+    }
   };
 
-  // Simulação de dados fictícios
+  // Data simulation
   const [cashFlowData, setCashFlowData] = useState({
     rechargeDates: ["2023-09-20", "2023-09-15", "2023-09-10"],
     usagePeriod: "Diurno",
@@ -113,19 +119,19 @@ const CashFlowRecord = ({ atm }) => {
     errorData,
   } = cashFlowData;
 
-  // Lógica sugestiva com base nos dados do gráfico
-  let suggestion = "";
-  if (popularService === "Levantamentos") {
-    suggestion =
-      "Prioridade de recarga de dinheiro nos dias em que há maior fluxo.";
-  } else if (
-    popularService === "Transferências" ||
-    popularService === "Consultas"
-  ) {
-    suggestion = "Prioridade de recarga de papel.";
-  } else {
-    suggestion = "Recarga de papel e dinheiro neste ATM em função da métrica.";
-  }
+  // Suggestion logic with memoization
+  const suggestion = useMemo(() => {
+    if (popularService === "Levantamentos") {
+      return "Prioridade de recarga de dinheiro nos dias em que há maior fluxo.";
+    } else if (
+      popularService === "Transferências" ||
+      popularService === "Consultas"
+    ) {
+      return "Prioridade de recarga de papel.";
+    } else {
+      return "Recarga de papel e dinheiro neste ATM em função da métrica.";
+    }
+  }, [popularService]);
 
   return (
     <div className="h-full w-full overflow-x-auto overflow-y-scroll p-4">
@@ -137,18 +143,20 @@ const CashFlowRecord = ({ atm }) => {
       >
         Gerar Relatório em PDF
       </button>
-      <p className="mb-2">
-        <strong>Datas de Recarga:</strong> {rechargeDates.join(", ")}
-      </p>
-      <p className="mb-2">
-        <strong>Período de Uso:</strong> {usagePeriod}
-      </p>
-      <p className="mb-2">
-        <strong>Serviço mais Popular:</strong> {popularService}
-      </p>
-      <p className="mb-4">
-        <strong>Média de Levantamento:</strong> {averageWithdrawalAmount}
-      </p>
+      <div className="mb-4">
+        <p className="mb-2">
+          <strong>Datas de Recarga:</strong> {rechargeDates.join(", ")}
+        </p>
+        <p className="mb-2">
+          <strong>Período de Uso:</strong> {usagePeriod}
+        </p>
+        <p className="mb-2">
+          <strong>Serviço mais Popular:</strong> {popularService}
+        </p>
+        <p className="mb-4">
+          <strong>Média de Levantamento:</strong> {averageWithdrawalAmount}
+        </p>
+      </div>
       <div className="mb-4 rounded-lg bg-white p-4" id="chart-container">
         <Chart
           options={{

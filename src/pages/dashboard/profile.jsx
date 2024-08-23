@@ -22,10 +22,12 @@ import { Link } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
 import { platformSettingsData, conversationsData, projectsData } from "@/data";
 import NumeroFormulario from "./NumeroFormulario";
+//https://angola24horas.com/media/k2/items/cache/e887325db307762073a263b661909170_XL.jpg
+//http://www.bfa.ao/images/image-share.jpg
 export function Profile() {
   return (
     <>
-      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(http://www.bfa.ao/images/image-share.jpg)] bg-cover	bg-top">
+      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://angola24horas.com/media/k2/items/cache/e887325db307762073a263b661909170_XL.jpg)] bg-cover	bg-top">
         <div className="absolute inset-0 h-full w-full bg-blue-500/50" />
       </div>
       <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
