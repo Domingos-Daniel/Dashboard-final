@@ -1,24 +1,37 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Chart from "react-apexcharts";
+import { motion } from "framer-motion";
 
 const ErrorLogs = ({ atm }) => {
   const [selectedInterval, setSelectedInterval] = useState("daily");
+  const [shuffledErrors, setShuffledErrors] = useState([]);
+
+  // Function to shuffle the errors randomly
+  const shuffleArray = (array) => {
+    return array.sort(() => Math.random() - 0.5);
+  };
+
+  useEffect(() => {
+    const initialErrors = [
+      "Falha ao dispensar dinheiro",
+      "Falha na leitura de cartões",
+      "Erro de conexão com o banco",
+      "Falha no sistema de segurança",
+      "Erro de manutenção",
+    ];
+
+    setShuffledErrors(shuffleArray(initialErrors));
+  }, []);
 
   const errorLogsData = useMemo(
     () => ({
       errorFrequency: Array.from(
-        { length: 7 },
+        { length: shuffledErrors.length },
         () => Math.floor(Math.random() * 9) + 1
       ),
-      possibleErrors: [
-        "Falha ao dispensar dinheiro",
-        "Falha na leitura de cartões",
-        "Erro de conexão com o banco",
-        "Falha no sistema de segurança",
-        "Erro de manutenção",
-      ],
+      possibleErrors: shuffledErrors,
     }),
-    []
+    [shuffledErrors]
   );
 
   const { errorFrequency, possibleErrors } = errorLogsData;
@@ -78,18 +91,43 @@ const ErrorLogs = ({ atm }) => {
     }
   }, [selectedInterval]);
 
-  const getErrorSuggestion = useMemo(() => {
-    const maxErrorFrequency = Math.max(...errorFrequency);
-    const maxErrorIndex = errorFrequency.indexOf(maxErrorFrequency);
-    const frequentError = possibleErrors[maxErrorIndex];
+  const getAISuggestions = useMemo(() => {
+    return possibleErrors.map((error, index) => {
+      let suggestion = "";
 
-    if (maxErrorFrequency <= 9) {
-      return `Prioridade de manutenção para resolver problemas frequentes de ${frequentError}.`;
-    } else if (maxErrorFrequency >= 5) {
-      return `Realizar uma verificação geral para evitar ${frequentError} recorrente.`;
-    } else {
-      return "O ATM está operando dentro do limite aceitável de erros.";
-    }
+      switch (error) {
+        case "Falha ao dispensar dinheiro":
+          suggestion =
+            "Sugestão de IA: Aumente a frequência de manutenção para o mecanismo de dispensa de dinheiro.";
+          break;
+        case "Falha na leitura de cartões":
+          suggestion =
+            "Sugestão de IA: Verifique e limpe os leitores de cartão regularmente.";
+          break;
+        case "Erro de conexão com o banco":
+          suggestion =
+            "Sugestão de IA: Verifique a estabilidade da conexão de rede do ATM.";
+          break;
+        case "Falha no sistema de segurança":
+          suggestion =
+            "Sugestão de IA: Realize uma auditoria completa no sistema de segurança.";
+          break;
+        case "Erro de manutenção":
+          suggestion =
+            "Sugestão de IA: Aumente a supervisão e a frequência das inspeções de manutenção.";
+          break;
+        default:
+          suggestion =
+            "Sugestão de IA: O ATM está operando dentro dos parâmetros normais.";
+          break;
+      }
+
+      return {
+        error,
+        suggestion,
+        frequency: errorFrequency[index],
+      };
+    });
   }, [errorFrequency, possibleErrors]);
 
   return (
@@ -117,7 +155,22 @@ const ErrorLogs = ({ atm }) => {
             <li key={index}>{error}</li>
           ))}
         </ul>
-        <p className="mt-4 font-semibold">Sugestão: {getErrorSuggestion}</p>
+        <div className="mt-4">
+          {getAISuggestions.map((item, index) => (
+            <motion.div
+              key={index}
+              className="mb-4 rounded-lg border border-blue-300 bg-blue-50 p-2"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+            >
+              <p className="font-semibold text-blue-600">{item.suggestion}</p>
+              <p className="text-sm text-gray-600">
+                Frequência do Erro: {item.frequency} vezes
+              </p>
+            </motion.div>
+          ))}
+        </div>
       </div>
       <Chart
         options={{
